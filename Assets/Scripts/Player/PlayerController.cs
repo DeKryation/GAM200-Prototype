@@ -18,22 +18,29 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            if (IsMoving && !touchingDirections.IsOnWall)
+            if (canMove)
             {
-                if (touchingDirections.IsGrounded)
+                if (IsMoving && !touchingDirections.IsOnWall)
                 {
-                    // Always use walkSpeed on ground
-                    return walkSpeed;
+                    if (touchingDirections.IsGrounded)
+                    {
+                        // Always use walkSpeed on ground
+                        return walkSpeed;
+                    }
+                    else
+                    {
+                        // Air move speed
+                        return airWalkSpeed;
+                    }
                 }
                 else
                 {
-                    // Air move speed
-                    return airWalkSpeed;
+                    // Idle speed is 0
+                    return 0f;
                 }
             }
             else
             {
-                // Idle speed is 0
                 return 0f;
             }
         }
@@ -67,6 +74,14 @@ public class PlayerController : MonoBehaviour
                 transform.localScale = newScale;
             }
             _isFacingRight = value;
+        }
+    }
+
+    public bool canMove
+    {
+        get
+        {
+            return animator.GetBool(AnimationStrings.canMove);  
         }
     }
 
@@ -111,10 +126,18 @@ public class PlayerController : MonoBehaviour
     public void OnJump(InputAction.CallbackContext context)
     {
         //TODO
-        if (context.started && touchingDirections.IsGrounded)
+        if (context.started && touchingDirections.IsGrounded && canMove)
         {
-            animator.SetTrigger(AnimationStrings.jump);
+            animator.SetTrigger(AnimationStrings.jumpTrigger);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpImpulse);
+        }
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            animator.SetTrigger(AnimationStrings.attackTrigger);
         }
     }
 }
