@@ -18,6 +18,6 @@ public class MainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+        Application.Quit();     //To leave the game
     } 
 }
