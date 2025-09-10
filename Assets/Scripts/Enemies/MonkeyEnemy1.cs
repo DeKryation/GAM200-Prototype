@@ -2,16 +2,18 @@ using Assets.Scripts;
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections))]
+[RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections), typeof(Damageable))]
 public class MonkeyEnemy1 : MonoBehaviour
 {
     public float walkSpeed = 3f;
     public float walkStopRate = 0.05f;
     public DetectionZone attackZone;
 
+
     Rigidbody2D rb;
     TouchingDirections touchingDirections;
     Animator animator;
+    Damageable damageable;
 
     public enum WalkFaceDirection { Right, Left }
 
@@ -66,7 +68,8 @@ public class MonkeyEnemy1 : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         touchingDirections = GetComponent<TouchingDirections>();
-        animator = GetComponent<Animator>();    
+        animator = GetComponent<Animator>();
+        damageable = GetComponent<Damageable>();
     }
 
     private void FixedUpdate()
@@ -76,10 +79,14 @@ public class MonkeyEnemy1 : MonoBehaviour
             FlipDirection();
         }
 
-        if(CanMove)
-        rb.linearVelocity = new Vector2(walkSpeed * walkDirectionVector.x, rb.linearVelocity.y);
-        else
-        rb.linearVelocity = new Vector2(Mathf.Lerp(rb.linearVelocity.x, 0, walkStopRate), rb.linearVelocity.y);
+        if (!damageable.LockVelocity)
+        {
+            if (CanMove)
+                rb.linearVelocity = new Vector2(walkSpeed * walkDirectionVector.x, rb.linearVelocity.y);
+            else
+                rb.linearVelocity = new Vector2(Mathf.Lerp(rb.linearVelocity.x, 0, walkStopRate), rb.linearVelocity.y);
+        }
+
     }
 
     private void FlipDirection()
@@ -100,6 +107,11 @@ public class MonkeyEnemy1 : MonoBehaviour
 
     void Update()
     {
-        HasTarget=attackZone.detectedColliders.Count > 0;
+        HasTarget = attackZone.detectedColliders.Count > 0;
+    }
+
+    public void OnHit(int damage, Vector2 knockback)
+    {
+        rb.linearVelocity = new Vector2(knockback.x, rb.linearVelocity.y + knockback.y);
     }
 }
