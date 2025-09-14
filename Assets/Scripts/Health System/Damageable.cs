@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using Assets.Scripts.Events;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -96,7 +97,7 @@ public class Damageable : MonoBehaviour
             timeSinceHit += Time.deltaTime;
         }
     }
-    
+
 
 
     public bool Hit(int damage, Vector2 knockback)
@@ -110,11 +111,24 @@ public class Damageable : MonoBehaviour
             animator.SetTrigger(AnimationStrings.hitTrigger);
             LockVelocity = true;
             damageableHit?.Invoke(damage, knockback);
+            CharacterEvents.characterDamaged.Invoke(gameObject, damage);
+
 
             return true;
         }
 
         return false;
+    }
+
+    public void Heal(int healthRestore)
+    {
+        if (IsAlive)
+        {
+            int maxHeal = Mathf.Max(MaxHealth - Health, 0);
+            int actualHeal = Mathf.Min(maxHeal, healthRestore);
+            Health += actualHeal;
+            CharacterEvents.characterHealed(gameObject, healthRestore);
+        }
     }
 
 }
