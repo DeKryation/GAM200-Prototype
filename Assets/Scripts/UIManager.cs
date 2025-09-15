@@ -11,10 +11,19 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        gameCanvas = FindAnyObjectByType<Canvas>(); //find first canvas, note multiple canvas might not work reprior
+        GameObject canvasObj = GameObject.Find("WorldCanvas");
+
+        if (canvasObj != null)
+        {
+            gameCanvas = canvasObj.GetComponent<Canvas>();
+        }
+        else
+        {
+            Debug.LogError("Canvas with the given name not found in the scene!");
+        }
     }
 
-    private void OnEnable()
+        private void OnEnable()
     {
         CharacterEvents.characterDamaged += CharacterTookDamage;
         CharacterEvents.characterHealed += CharacterHealed;

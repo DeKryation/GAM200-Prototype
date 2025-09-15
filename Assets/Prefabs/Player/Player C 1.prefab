@@ -15,11 +15,12 @@ GameObject:
   - component: {fileID: 6965672022856241822}
   - component: {fileID: 5332650277463696947}
   - component: {fileID: 4882225139127972577}
+  - component: {fileID: 7962047245806924395}
   - component: {fileID: 6520482916002095336}
   - component: {fileID: 1971376067458613454}
   m_Layer: 7
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -320,6 +321,25 @@ CapsuleCollider2D:
   m_Offset: {x: -0.007091522, y: -0.092187345}
   m_Size: {x: 0.49880028, y: 0.9526454}
   m_Direction: 0
+--- !u!114 &7962047245806924395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3902651812024506447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c70bd961ebeb5b4ca6dc02473a2636a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxAdrenaline: 3000
+  startAdrenaline: 1500
+  decreaseRate: 75
+  increaseRate: 75
+  adrenalineChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6520482916002095336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,6 +399,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  damageableDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  healthChanged:
+    m_PersistentCalls:
+      m_Calls: []
   _maxHealth: 100
   _health: 100
   _isAlive: 1
