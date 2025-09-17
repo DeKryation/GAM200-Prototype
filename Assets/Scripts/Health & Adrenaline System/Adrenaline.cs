@@ -7,7 +7,7 @@ public class Adrenaline : MonoBehaviour
     [SerializeField] private int maxAdrenaline = 150;
     [SerializeField] private int startAdrenaline = 75;
     [SerializeField] private float decreaseRate = 5f; // units per second when idle
-    [SerializeField] private float increaseRate = 5f; // units per second when moving
+    [SerializeField] private float increaseRate = 5f; // units per second when moving 
 
     public int CurrentAdrenaline { get; private set; }
 
