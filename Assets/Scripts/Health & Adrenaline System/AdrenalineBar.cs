@@ -43,5 +43,23 @@ public class AdrenalineBar : MonoBehaviour
     {
         adrenalineSlider.value = Calculate(newVal, maxVal);
         adrenalineText.text = "ADREN " + newVal + " / " + maxVal;
+
+        // Change bar color based on thresholds
+        Image fillImage = adrenalineSlider.fillRect.GetComponent<Image>();
+        if (fillImage != null)
+        {
+            if (newVal >= 2000)
+            {
+                fillImage.color = Color.red;  // high adrenaline
+            }
+            else if (newVal <= 1000)
+            {
+                fillImage.color = new Color(0.5f, 0.8f, 1f); // light blue
+            }
+            else
+            {
+                fillImage.color = Color.yellow; // neutral
+            }
+        }
     }
 }

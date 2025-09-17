@@ -9,6 +9,7 @@ public class Adrenaline : MonoBehaviour
     [SerializeField] private float decreaseRate = 5f; // units per second when idle
     [SerializeField] private float increaseRate = 5f; // units per second when moving 
 
+    private PlayerController playerController; //SPEED MODIFICATIOn
     public int CurrentAdrenaline { get; private set; }
 
     public UnityEvent<int, int> adrenalineChanged;
@@ -21,6 +22,7 @@ public class Adrenaline : MonoBehaviour
         CurrentAdrenaline = startAdrenaline;
         animator = GetComponent<Animator>();
         isMovingHash = Animator.StringToHash(AnimationStrings.isMoving);
+        playerController = GetComponent<PlayerController>(); //SPEEDMODIF
     }
 
     private void Update()
@@ -58,6 +60,26 @@ public class Adrenaline : MonoBehaviour
             CurrentAdrenaline = newVal;
             adrenalineChanged?.Invoke(CurrentAdrenaline, maxAdrenaline);
         }
+        // speed boost check
+        if (playerController != null)
+        {
+            if (CurrentAdrenaline > 2000)
+            {
+                playerController.walkSpeed = 10f;     // +3
+                playerController.airWalkSpeed = 5f; // 
+            }
+            else if (CurrentAdrenaline <= 1000)
+            {
+                playerController.walkSpeed = 4f;     // -3
+                playerController.airWalkSpeed = 5f; // 
+            }
+            else
+            {
+                playerController.walkSpeed = 7f;     // normal
+                playerController.airWalkSpeed = 5f; // normal
+            }
+        }
+
     }
     public void GainAdrenalineOnAttack()
     {
