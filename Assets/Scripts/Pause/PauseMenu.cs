@@ -29,18 +29,37 @@ public class PauseMenu : MonoBehaviour
             }
         }
     }
-    public void Pause()     // Pauses the game when the pause button is triggered
+    public void Pause() // pause the game when the button is triggered
     {
         PausePanel.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
+
+        // Freeze player rigidbody
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            var anim = player.GetComponent<Animator>();
+            if (anim != null) anim.speed = 0f;
+            var rb = player.GetComponent<Rigidbody2D>();
+            if (rb != null) rb.linearVelocity = Vector2.zero;
+        }
+
     }
 
     public void Resume()    // To resume the game from pause
     {
+
         PausePanel.SetActive(false);
         Time.timeScale = 1f;
         GameIsPaused = false;
+
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            var anim = player.GetComponent<Animator>();
+            if (anim != null) anim.speed = 1f;
+        }
     }
 
     public void LoadMainMenu()  // Load to Main Menu

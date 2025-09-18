@@ -116,6 +116,8 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (PauseMenu.GameIsPaused) return;
+
         moveInput = context.ReadValue<Vector2>();
 
         if (IsAlive)
@@ -133,6 +135,8 @@ public class PlayerController : MonoBehaviour
 
     private void SetFacingDirection(Vector2 moveInput)
     {
+        if (PauseMenu.GameIsPaused) return;
+
         if (moveInput.x > 0 && !IsFacingRight)
         {
             //Right
@@ -148,6 +152,8 @@ public class PlayerController : MonoBehaviour
     public void OnJump(InputAction.CallbackContext context)
     {
         //TODO
+        if (PauseMenu.GameIsPaused) return;
+
         if (context.started && touchingDirections.IsGrounded && canMove)
         {
             animator.SetTrigger(AnimationStrings.jumpTrigger);
@@ -157,6 +163,8 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
+        if (PauseMenu.GameIsPaused) return;
+
         if (context.started)
         {
             animator.SetTrigger(AnimationStrings.attackTrigger);
