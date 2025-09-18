@@ -112,10 +112,10 @@ GameObject:
   - component: {fileID: 7702081120171993115}
   - component: {fileID: 5481370887511020604}
   - component: {fileID: 4817889855213235107}
+  - component: {fileID: 3447920803129988085}
   - component: {fileID: 2381471500385776384}
   - component: {fileID: 839577555627427757}
   - component: {fileID: 172970355902157695}
-  - component: {fileID: 3447920803129988085}
   - component: {fileID: 2007143979166073206}
   - component: {fileID: 6556144210794193232}
   m_Layer: 7
@@ -135,7 +135,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6213959162560715398}
@@ -240,6 +240,26 @@ MonoBehaviour:
   airWalkSpeed: 5
   _isMoving: 0
   _isFacingRight: 0
+--- !u!114 &3447920803129988085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8615007166065916369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c70bd961ebeb5b4ca6dc02473a2636a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxAdrenaline: 3000
+  startAdrenaline: 1500
+  decreaseRate: 75
+  increaseRate: 75
+  isMoving: 0
+  adrenalineChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2381471500385776384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,26 +441,6 @@ CapsuleCollider2D:
   m_Offset: {x: -0.007091522, y: -0.092187345}
   m_Size: {x: 0.49880028, y: 0.9526454}
   m_Direction: 0
---- !u!114 &3447920803129988085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8615007166065916369}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c70bd961ebeb5b4ca6dc02473a2636a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxAdrenaline: 3000
-  startAdrenaline: 1500
-  decreaseRate: 75
-  increaseRate: 75
-  isMoving: 1
-  adrenalineChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &2007143979166073206
 MonoBehaviour:
   m_ObjectHideFlags: 0

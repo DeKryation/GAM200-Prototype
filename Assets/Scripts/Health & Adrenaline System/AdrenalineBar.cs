@@ -21,7 +21,7 @@ public class AdrenalineBar : MonoBehaviour
         if (adrenaline != null)
         {
             adrenalineSlider.value = Calculate(adrenaline.CurrentAdrenaline, 150);
-            adrenalineText.text = "ADREN " + adrenaline.CurrentAdrenaline + " / 150";
+            adrenalineText.text = "HEARTRATE " + adrenaline.CurrentAdrenaline + " / 150";
         }
     }
 
@@ -42,7 +42,7 @@ public class AdrenalineBar : MonoBehaviour
     private void OnAdrenalineChanged(int newVal, int maxVal)
     {
         adrenalineSlider.value = Calculate(newVal, maxVal);
-        adrenalineText.text = "ADREN " + newVal + " / " + maxVal;
+        adrenalineText.text = "HEARTRATE " + newVal + " / " + maxVal;
 
         // Change bar color based on thresholds
         Image fillImage = adrenalineSlider.fillRect.GetComponent<Image>();
