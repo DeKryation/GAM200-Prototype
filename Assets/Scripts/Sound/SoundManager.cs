@@ -1,41 +1,110 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Unity.VisualScripting;
+
 
 public class SoundManager : MonoBehaviour
 {
-    public static SoundManager instance;
+    public static SoundManager Instance;
 
-    [SerializeField]    //by adding this, still allows to see in the inspector
-    private SoundLibrary sfxLibrary;    //would not be shown up in the inspector since its private
-    [SerializeField]
-    private AudioSource sfx2DSource;
+    public SoundLibrary[] musicSounds, sfxSounds;
+    public AudioSource musicSource, sfxSource;
+    public static float musicVolume = 1f, sfxVolume = 1f;
+
     private void Awake()
     {
-        if (instance != null)
+        if (Instance == null)
         {
-            Destroy(gameObject);
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
+            Destroy(gameObject);
         }
     }
 
-    public void PlaySound3D(AudioClip clip, Vector3 pos)       // useful to input this, to play an audio that is not in the audiolibrary
+    private void Start()
     {
-        if (clip != null)
+        if (!musicSource.isPlaying)
+            PlayMusic("BGM");
+    }
+
+    public void PlayMusic(string name)
+    {
+        SoundLibrary s = Array.Find(musicSounds, x => x.name == name);
+        if (s == null)
         {
-            AudioSource.PlayClipAtPoint(clip, pos);
+            Debug.Log("Sound Not Found");
+        }
+        else
+        {
+            musicSource.volume = musicVolume * s.volume;
+            musicSource.pitch = s.pitch;
+            musicSource.loop = s.loop;
+            musicSource.clip = s.clip;
+            musicSource.Play();
+        }
+    }
+    public void PlaySFX(string name)
+    {
+        SoundLibrary s = Array.Find(sfxSounds, x => x.name == name);
+
+        if (s == null)
+        {
+            Debug.Log("Sound Not Found");
+        }
+        else
+        {
+            sfxSource.volume = sfxVolume * s.volume;
+            sfxSource.pitch = s.pitch;
+            sfxSource.loop = s.loop;
+            sfxSource.clip = s.clip;
+            sfxSource.Play();
         }
     }
 
-    public void PlaySound3D(string soundName, Vector3 pos)
+    public void ToggleMusic()
     {
-        PlaySound3D(sfxLibrary.GetClipFromName(soundName), pos);       //given the access to the soundlibrary
+        musicSource.mute = !musicSource.mute;
+    }
+    public void ToggleSFX()
+    {
+        sfxSource.mute = !sfxSource.mute;
     }
 
-    public void PlaySound2D(string soundName)
+    public void MusicVolume(float volume)
     {
-        sfx2DSource.PlayOneShot(sfxLibrary.GetClipFromName(soundName));
+        musicSource.volume = volume;
+        musicVolume = volume;
+    }
+    public void SFXVolume(float volume)
+    {
+        sfxSource.volume = volume;
+        sfxVolume = volume;
+    }
+    public IEnumerator FadeOutTrack(float timeToFade)
+    {
+
+        float timeElapsed = 0;
+        float b = musicSource.volume;
+
+        while (timeElapsed < timeToFade)
+        {
+            Debug.Log(musicSource.volume);
+            musicSource.volume = b * Mathf.Lerp(1, 0, timeElapsed / timeToFade);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        musicSource.Stop();
+        musicSource.volume = b;
+    }
+
+    public void FadeOut(float timeToFade)
+    {
+        StartCoroutine(FadeOutTrack(timeToFade));
     }
 }

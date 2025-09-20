@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 172970355902157695}
   - component: {fileID: 2007143979166073206}
   - component: {fileID: 6556144210794193232}
+  - component: {fileID: 5773134258488073097}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -238,6 +239,9 @@ MonoBehaviour:
   walkSpeed: 7
   jumpImpulse: 8
   airWalkSpeed: 5
+  dashDuration: 0.2
+  dashForce: 15
+  dashCooldown: 2
   _isMoving: 0
   _isFacingRight: 0
 --- !u!114 &3447920803129988085
@@ -377,6 +381,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d3d63032-d1fa-4ecc-b5e9-9c24c5d4691f
     m_ActionName: 'Player/Jump[/Keyboard/space]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4817889855213235107}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 7b7faf0e-4113-4243-810d-0313b9f1bd0b
+    m_ActionName: 'Player/Dash[/Keyboard/leftShift]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -511,3 +531,15 @@ MonoBehaviour:
   _isAlive: 1
   IsInvincible: 0
   invincibilityTime: 1
+--- !u!114 &5773134258488073097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8615007166065916369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfe00233592887641930e1917f7e02fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

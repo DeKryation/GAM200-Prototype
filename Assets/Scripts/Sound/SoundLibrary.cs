@@ -1,24 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]  //to be able to see and inspect
-public struct SoundEffect
+[System.Serializable]
+public class SoundLibrary
 {
-    public string groupID;
-    public AudioClip[] clips;
-}
-public class SoundLibrary : MonoBehaviour
-{
-    public SoundEffect[] soundEffects;  //to have multiple audio clips under inspector
+    public string name;
+    public AudioClip clip;
 
-    public AudioClip GetClipFromName(string name)
-    {
-        foreach (var soundEffect in soundEffects)
-        {
-            if (soundEffect.groupID == name)    //if the name match the groupID
-            {
-                return soundEffect.clips[Random.Range(0, soundEffect.clips.Length)];
-            }
-        }
-        return null;    //if didn't find anything, will return
-    }
+    [Range(0f, 1f)] public float volume;
+    [Range(.1f, 3f)] public float pitch;
+
+    public bool loop;
 }
+

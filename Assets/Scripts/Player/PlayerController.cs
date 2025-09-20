@@ -8,9 +8,22 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed = 7f;
     public float jumpImpulse = 8f;
     public float airWalkSpeed = 5f;
+
+    [SerializeField] private float dashDuration = 0.2f;
+    private bool isDashing;
+    private float dashEndTime;
+
+    [Header("Dash Settings")]
+    [SerializeField] private float dashForce = 15f;
+    [SerializeField] private float dashCooldown = 2f; // cooldown in seconds
+    private float lastDashTime = -999f;
+
+
     Vector2 moveInput;
     TouchingDirections touchingDirections;
     Damageable damageable;
+
+
 
     [SerializeField]
     private bool _isMoving = false;
@@ -109,7 +122,19 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         if (!damageable.LockVelocity)
-        rb.linearVelocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.linearVelocity.y);
+        {
+            if (isDashing)
+            {
+                // keep dash velocity until dash ends
+                if (Time.time >= dashEndTime)
+                    isDashing = false;
+            }
+            else
+            {
+                // normal movement
+                rb.linearVelocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.linearVelocity.y);
+            }
+        }
 
         animator.SetFloat(AnimationStrings.yVelocity, rb.linearVelocity.y);
     }
@@ -166,8 +191,27 @@ public class PlayerController : MonoBehaviour
         if (PauseMenu.GameIsPaused) return;
 
         if (context.started)
+        {          
+            animator.SetTrigger(AnimationStrings.attackTrigger);          
+        }
+    }
+
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (context.started && Time.time >= lastDashTime + dashCooldown && IsAlive)
         {
-            animator.SetTrigger(AnimationStrings.attackTrigger);
+            float dashDir = IsFacingRight ? 1f : -1f;
+            rb.linearVelocity = new Vector2(dashDir * dashForce, rb.linearVelocity.y);
+
+            isDashing = true;
+            dashEndTime = Time.time + dashDuration;
+            lastDashTime = Time.time;
+
+            Debug.Log($"DASH PERFORMED at {Time.time}, direction: {(IsFacingRight ? "Right" : "Left")}");
+            {
+                GetComponent<Adrenaline>()?.AddAdrenaline(50);
+                Debug.Log("Adrenaline +50 from dash");
+            }
         }
     }
 
