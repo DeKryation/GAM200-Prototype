@@ -225,7 +225,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.7868042, y: 166}
+  m_AnchoredPosition: {x: -67, y: 126}
   m_SizeDelta: {x: 80.94473, y: -232.62167}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &331322439
@@ -248,10 +248,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: .GAME TITLE.
+  m_text: MONKEY STOLE MY GPA
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bc9c00c7be38ae842b82f01e5c99fe43, type: 2}
+  m_sharedMaterial: {fileID: -7246587616619713785, guid: bc9c00c7be38ae842b82f01e5c99fe43, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -275,13 +275,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.7
-  m_fontSizeBase: 53.7
+  m_fontSize: 74
+  m_fontSizeBase: 74
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 3
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -313,7 +313,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.3344574, y: -1.5018921, z: -0.09613037, w: 0.296463}
+  m_margin: {x: -36.335846, y: -1.5018921, z: -168.33917, w: 0.296463}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1397,7 +1397,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.7868042, y: 211}
+  m_AnchoredPosition: {x: -0.7868042, y: 168}
   m_SizeDelta: {x: 80.94473, y: -232.62167}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &897309187
@@ -1917,7 +1917,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.7867851, y: 65.786804}
+  m_AnchoredPosition: {x: -0.7867851, y: 34}
   m_SizeDelta: {x: 169.2132, y: 51.5641}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1427454970
@@ -2204,7 +2204,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.7867851, y: 0.78679657}
+  m_AnchoredPosition: {x: -0.7867851, y: -31.000008}
   m_SizeDelta: {x: 232.9441, y: 51.5641}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1621845803
@@ -2525,7 +2525,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.7867851, y: -61.213196}
+  m_AnchoredPosition: {x: -0.7867851, y: -93}
   m_SizeDelta: {x: 144.8223, y: 51.5641}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1859314805
