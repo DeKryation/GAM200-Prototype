@@ -191,8 +191,8 @@ public class PlayerController : MonoBehaviour
         if (PauseMenu.GameIsPaused) return;
 
         if (context.started)
-        {          
-            animator.SetTrigger(AnimationStrings.attackTrigger);          
+        {
+            animator.SetTrigger(AnimationStrings.attackTrigger);
         }
     }
 
@@ -221,4 +221,13 @@ public class PlayerController : MonoBehaviour
 
         GetComponent<Adrenaline>()?.AddAdrenaline(-100);
     }
+
+    public void OnParry(InputAction.CallbackContext context)
+{
+    if (context.started && IsAlive && canMove)
+    {
+        var parry = GetComponent<ParryWindow>();
+        if (parry != null) parry.StartParry();
+    }
+}
 }

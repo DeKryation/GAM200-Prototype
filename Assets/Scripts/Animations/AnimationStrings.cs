@@ -22,5 +22,8 @@ namespace Assets.Scripts
         internal static string hitTrigger = "hit";
         internal static string lockVelocity = "lockVelocity";
         internal static string attackCooldown = "attackCooldown";
+        internal static string isParrying = "isParrying";
+        internal static string parryTrigger = "parry";
+        internal static string canAttack = "canAttack";
     }
 }

@@ -8,8 +8,8 @@ TagManager:
   - Spike
   - MusicManager
   - ArenaBounds
-  - ManHole
   - SoundManager
+  - Enemy
   layers:
   - Default
   - TransparentFX
