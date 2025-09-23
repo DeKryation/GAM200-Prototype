@@ -391,6 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fcc471418d42a34e86f708f418d6fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallAsWallAngle: 75
   castFilter:
     useTriggers: 0
     useLayerMask: 1
@@ -475,8 +476,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   windowDuration: 0.18
   stunSeconds: 3
+  parryCooldown: 3
   parryHitbox: {fileID: 7871746444425046920}
   enemyTag: Enemy
+  canParryBool: canParry
 --- !u!1 &5681495036915577323
 GameObject:
   m_ObjectHideFlags: 0

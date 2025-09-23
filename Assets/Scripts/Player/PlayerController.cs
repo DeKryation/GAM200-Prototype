@@ -18,12 +18,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float dashCooldown = 2f; // cooldown in seconds
     private float lastDashTime = -999f;
 
-
     Vector2 moveInput;
     TouchingDirections touchingDirections;
     Damageable damageable;
-
-
 
     [SerializeField]
     private bool _isMoving = false;
@@ -59,12 +56,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
     public bool IsMoving
     {
-        get
-        {
-            return _isMoving;
-        }
+        get => _isMoving;
         private set
         {
             _isMoving = value;
@@ -72,13 +67,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool _isFacingRight = true;  //FLIP
-    public bool IsFacingRight // FLIP
+    public bool _isFacingRight = true;  // FLIP
+    public bool IsFacingRight           // FLIP
     {
-        get
-        {
-            return _isFacingRight;
-        }
+        get => _isFacingRight;
         private set
         {
             if (_isFacingRight != value)
@@ -91,22 +83,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool canMove
-    {
-        get
-        {
-            return animator.GetBool(AnimationStrings.canMove);
-        }
-    }
-
-    public bool IsAlive
-    {
-        get
-        {
-            return animator.GetBool(AnimationStrings.isAlive);
-        }
-    }
-
+    public bool canMove => animator.GetBool(AnimationStrings.canMove);
+    public bool IsAlive => animator.GetBool(AnimationStrings.isAlive);
 
     Rigidbody2D rb;
     Animator animator;
@@ -154,8 +132,6 @@ public class PlayerController : MonoBehaviour
         {
             IsMoving = false;
         }
-
-
     }
 
     private void SetFacingDirection(Vector2 moveInput)
@@ -164,19 +140,19 @@ public class PlayerController : MonoBehaviour
 
         if (moveInput.x > 0 && !IsFacingRight)
         {
-            //Right
+            // Right
             IsFacingRight = true;
         }
         else if (moveInput.x < 0 && IsFacingRight)
         {
-            //Left
+            // Left
             IsFacingRight = false;
         }
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        //TODO
+        // TODO
         if (PauseMenu.GameIsPaused) return;
 
         if (context.started && touchingDirections.IsGrounded && canMove)
@@ -208,26 +184,27 @@ public class PlayerController : MonoBehaviour
             lastDashTime = Time.time;
 
             Debug.Log($"DASH PERFORMED at {Time.time}, direction: {(IsFacingRight ? "Right" : "Left")}");
-            {
-                GetComponent<Adrenaline>()?.AddAdrenaline(50);
-                Debug.Log("Adrenaline +50 from dash");
-            }
+            GetComponent<Adrenaline>()?.AddAdrenaline(50);
+            Debug.Log("Adrenaline +50 from dash");
         }
     }
 
     public void OnHit(int damage, Vector2 knockback)
     {
         rb.linearVelocity = new Vector2(knockback.x, rb.linearVelocity.y + knockback.y);
-
         GetComponent<Adrenaline>()?.AddAdrenaline(-100);
     }
 
     public void OnParry(InputAction.CallbackContext context)
-{
-    if (context.started && IsAlive && canMove)
     {
-        var parry = GetComponent<ParryWindow>();
-        if (parry != null) parry.StartParry();
+        if (PauseMenu.GameIsPaused) return;
+
+        if (context.started && IsAlive)
+        {
+            // Do NOT set any animator trigger here.
+            // Just ask ParryWindow to parry — it already checks cooldown.
+            var parry = GetComponent<ParryWindow>();
+            if (parry != null) parry.StartParry();
+        }
     }
-}
 }

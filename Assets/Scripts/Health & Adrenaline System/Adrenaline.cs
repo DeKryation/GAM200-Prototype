@@ -66,17 +66,17 @@ public class Adrenaline : MonoBehaviour
         {
             if (CurrentAdrenaline > 2000)
             {
-                playerController.walkSpeed = 10f;     // +3
+                playerController.walkSpeed = 8f;     // +2
                 playerController.airWalkSpeed = 5f; // 
             }
             else if (CurrentAdrenaline <= 1000)
             {
-                playerController.walkSpeed = 4f;     // -3
+                playerController.walkSpeed = 4f;     // -2
                 playerController.airWalkSpeed = 5f; // 
             }
             else
             {
-                playerController.walkSpeed = 7f;     // normal
+                playerController.walkSpeed = 6f;     // normal
                 playerController.airWalkSpeed = 5f; // normal
             }
         }

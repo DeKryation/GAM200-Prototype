@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class TouchingDirections : MonoBehaviour
 {
+    [SerializeField] private float wallAsWallAngle = 75f;
+
     public ContactFilter2D castFilter;
     public float groundDistance = 0.05f;
     public float wallDistance = 0.2f;
@@ -69,7 +71,25 @@ public class TouchingDirections : MonoBehaviour
     void FixedUpdate()
     {
         IsGrounded = touchingCol.Cast(Vector2.down, castFilter, groundHits, groundDistance) > 0;
-        IsOnWall = touchingCol.Cast(wallCheckDirection, castFilter, wallHits, wallDistance) > 0;
+
+        int count = touchingCol.Cast(wallCheckDirection, castFilter, wallHits, wallDistance);
+        bool wallDetected = false;
+
+        for (int i = 0; i < count; i++)
+        {
+            // Skip self-hits
+            if (wallHits[i].collider == touchingCol) continue;
+
+            // Angle between hit normal and up; big angle => steep
+            float angleFromUp = Vector2.Angle(wallHits[i].normal, Vector2.up);
+            if (angleFromUp >= wallAsWallAngle)
+            {
+                wallDetected = true;
+                break;
+            }
+        }
+
+        IsOnWall = IsOnWall = wallDetected;
         IsOnCeiling = touchingCol.Cast(Vector2.up, castFilter, ceilingHits, ceilingDistance) > 0;
     }
 }

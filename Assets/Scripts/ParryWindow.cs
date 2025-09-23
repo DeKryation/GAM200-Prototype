@@ -10,7 +10,7 @@ public class ParryWindow : MonoBehaviour
     [SerializeField] private float stunSeconds = 3f;         // enemy immobilize time
 
     [Header("Cooldown")]
-    [SerializeField] private float parryCooldown = 3f;       // <-- cooldown seconds
+    [SerializeField] private float parryCooldown = 3f;       // cooldown seconds
     private float _lastParryTime = -999f;
     public bool IsOnCooldown => Time.time < _lastParryTime + parryCooldown;
     public float CooldownRemaining =>
@@ -20,14 +20,33 @@ public class ParryWindow : MonoBehaviour
     [SerializeField] private Collider2D parryHitbox;         // disabled by default
     [SerializeField] private string enemyTag = "Enemy";
 
+    [Header("Animator Params")]
+    // Trigger is already in AnimationStrings.parryTrigger
+    // This bool is used to reflect "can parry now?" for transitions/UI.
+    [SerializeField] private string canParryBool = "canParry";
+
     public bool IsParrying { get; private set; }
 
     private Animator animator;
+    private int _canParryHash;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         if (parryHitbox != null) parryHitbox.enabled = false;
+
+        _canParryHash = Animator.StringToHash(canParryBool);
+
+        // start allowed (unless you want to begin on cooldown)
+        if (_canParryHash != 0)
+            animator.SetBool(_canParryHash, true);
+    }
+
+    private void Update()
+    {
+        // Keep animator in sync: true only when NOT on cooldown and NOT already parrying
+        if (_canParryHash != 0)
+            animator.SetBool(_canParryHash, !IsOnCooldown);
     }
 
     public void StartParry()
@@ -36,7 +55,7 @@ public class ParryWindow : MonoBehaviour
 
         if (IsOnCooldown)
         {
-            // optional: feedback here (sound/UI)
+            // Do NOT set the trigger while on cooldown
             Debug.Log($"Parry on cooldown: {CooldownRemaining:0.00}s left");
             return;
         }
@@ -55,13 +74,17 @@ public class ParryWindow : MonoBehaviour
     private IEnumerator CloseWindowAfter(float t)
     {
         yield return new WaitForSeconds(t);
+
         IsParrying = false;
+
         if (parryHitbox)
         {
             parryHitbox.enabled = false;
             Debug.Log("Parry OFF: hitbox disabled");
         }
-        // cooldown continues to run after the window closes
+
+        // We don't flip canParry true here; Update() will set it to true
+        // automatically once the cooldown has expired.
     }
 
     private void OnTriggerEnter2D(Collider2D other)
