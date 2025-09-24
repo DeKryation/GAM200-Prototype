@@ -83,6 +83,16 @@ MonoBehaviour:
     volume: 0.5
     pitch: 1
     loop: 0
+  - name: PlayerHitSuccess
+    clip: {fileID: 8300000, guid: 3c3508d76474fab49a877f51e4b88b9c, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+  - name: PlayerJump
+    clip: {fileID: 8300000, guid: dd66141cbf5292942bb6de1fd9d975c6, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
   musicSource: {fileID: 8604122282671369631}
   sfxSource: {fileID: 2813949343350935384}
 --- !u!1 &6321321363856608070
