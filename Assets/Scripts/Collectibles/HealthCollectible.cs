@@ -20,6 +20,7 @@ public class HealthCollectible : MonoBehaviour
         if (damageable)
         {
             damageable.Heal(healthRestore);
+            SoundManager.Instance.PlaySFX("HealthPickup");
             Destroy(gameObject);
         }
     }

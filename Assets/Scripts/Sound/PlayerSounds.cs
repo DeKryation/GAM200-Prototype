@@ -45,4 +45,23 @@ public class PlayerSounds : MonoBehaviour
         // randomize between multiple footstep clips if you want variety
         SoundManager.Instance.PlaySFX("PlayerFootstep");
     }
+
+    public void PlayDashSFX()
+    {
+        SoundManager.Instance.PlaySFX("PlayerDash");
+    }
+
+    public void PlayParrySFX()
+    {
+        SoundManager.Instance.PlaySFX("PlayerParry");
+    }
+    public void PlayJumpSFX()
+    {
+        SoundManager.Instance.PlaySFX("PlayerJump");
+    }
+
+    public void PlayKenaHitSFX()
+    {
+        SoundManager.Instance.PlaySFX("PlayerHitSuccess");
+    }
 }

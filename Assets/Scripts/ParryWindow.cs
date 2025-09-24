@@ -126,6 +126,7 @@ public class ParryWindow : MonoBehaviour
     {
         if (!IsParrying) return;
 
+        SoundManager.Instance.PlaySFX("ParrySuccess");
         attack.Neutralize();
 
         var enemyRoot = attack.transform.root;

@@ -320,6 +320,7 @@ GameObject:
   - component: {fileID: 7411711434616800988}
   - component: {fileID: 9043863513202735319}
   - component: {fileID: 4406270315585923958}
+  - component: {fileID: 9046861414735801443}
   m_Layer: 8
   m_Name: MonkeyEnemy1
   m_TagString: Enemy
@@ -495,6 +496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fcc471418d42a34e86f708f418d6fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallAsWallAngle: 75
   castFilter:
     useTriggers: 0
     useLayerMask: 1
@@ -589,3 +591,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attacks: []
   autoFindChildren: 1
+--- !u!114 &9046861414735801443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7905345990801645427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 498e54f7f82e7a5419bf21d97f102d17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

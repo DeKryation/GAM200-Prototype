@@ -180,6 +180,7 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector2(dashDir * dashForce, rb.linearVelocity.y);
 
             isDashing = true;
+            SoundManager.Instance.PlaySFX("PlayerDash");
             dashEndTime = Time.time + dashDuration;
             lastDashTime = Time.time;
 
