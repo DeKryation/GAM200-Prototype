@@ -10,6 +10,7 @@ TagManager:
   - ArenaBounds
   - SoundManager
   - Enemy
+  - Platform
   layers:
   - Default
   - TransparentFX
