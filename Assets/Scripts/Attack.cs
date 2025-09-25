@@ -47,14 +47,16 @@ public class Attack : MonoBehaviour
     {
         if (_neutralized) return;
 
-        var parry = collision.GetComponent<ParryWindow>();
+        var parry = collision.GetComponent<ParryWindow>()
+                    ?? collision.GetComponentInParent<ParryWindow>();
         if (parry != null && parry.IsParrying)
         {
             parry.OnSuccessfulParry(this);
             return;
         }
 
-        var damageable = collision.GetComponent<Damageable>();
+        var damageable = collision.GetComponent<Damageable>()
+                         ?? collision.GetComponentInParent<Damageable>();
         if (damageable != null)
         {
             Vector2 deliveredKnockback =

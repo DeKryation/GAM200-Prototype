@@ -25,7 +25,14 @@ public class ParryWindow : MonoBehaviour
     // This bool is used to reflect "can parry now?" for transitions/UI.
     [SerializeField] private string canParryBool = "canParry";
 
+    [SerializeField] private GameObject parryFxPrefab;
+    [SerializeField] private Vector2 fxLocalOffset = new Vector2(0.3f, 0.6f);
+    [SerializeField] private float fxLifetime = 0.35f;
+
     public bool IsParrying { get; private set; }
+
+    private bool _parryConsumed = false;          // play once per window
+    private int _lastAttackId = 0;
 
     private Animator animator;
     private int _canParryHash;
@@ -49,6 +56,18 @@ public class ParryWindow : MonoBehaviour
             animator.SetBool(_canParryHash, !IsOnCooldown);
     }
 
+    private void SpawnParryFX()
+    {
+        if (!parryFxPrefab) return;
+
+        // flip offset with facing direction
+        float dir = Mathf.Sign(transform.localScale.x == 0 ? 1 : transform.localScale.x);
+        Vector3 worldPos = transform.position + new Vector3(fxLocalOffset.x * dir, fxLocalOffset.y, 0f);
+
+        var go = Instantiate(parryFxPrefab, worldPos, Quaternion.identity);
+        Destroy(go, fxLifetime);
+    }
+
     public void StartParry()
     {
         if (IsParrying) return;
@@ -61,7 +80,8 @@ public class ParryWindow : MonoBehaviour
         }
 
         _lastParryTime = Time.time; // start cooldown now
-
+        _parryConsumed = false;
+        _lastAttackId = 0;
         IsParrying = true;
         if (parryHitbox) parryHitbox.enabled = true;
 
@@ -71,6 +91,11 @@ public class ParryWindow : MonoBehaviour
         StartCoroutine(CloseWindowAfter(windowDuration));
     }
 
+    private void EndParryEarly()
+    {
+        IsParrying = false;
+        if (parryHitbox) parryHitbox.enabled = false;
+    }
     private IEnumerator CloseWindowAfter(float t)
     {
         yield return new WaitForSeconds(t);
@@ -89,27 +114,35 @@ public class ParryWindow : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!IsParrying) return;
+        if (!IsParrying || _parryConsumed) return;
 
         var attack = other.GetComponent<Attack>() ?? other.GetComponentInParent<Attack>();
         if (attack == null) return;
 
+        int id = attack.GetInstanceID();
+        if (_lastAttackId == id) return;
+
         var enemyRoot = attack.transform.root;
         if (!enemyRoot.CompareTag(enemyTag)) return;
 
+
+        _parryConsumed = true;
+        _lastAttackId = id;
         attack.Neutralize();
 
+        // put your feedback here so it always fires on success
+        SpawnParryFX();
+        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX("ParrySuccess");
+
         var monkey = enemyRoot.GetComponent<MonkeyEnemy1>();
-        if (monkey != null)
-        {
-            monkey.OnStunned(stunSeconds);
-        }
+        if (monkey != null) monkey.OnStunned(stunSeconds);
         else
         {
             var enemyAnimator = enemyRoot.GetComponent<Animator>();
             if (enemyAnimator != null)
                 StartCoroutine(ImmobilizeEnemy(enemyAnimator, stunSeconds));
         }
+        EndParryEarly();
     }
 
     private IEnumerator ImmobilizeEnemy(Animator enemyAnimator, float seconds)
@@ -121,13 +154,18 @@ public class ParryWindow : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         enemyAnimator.SetBool(AnimationStrings.canMove, true);
     }
-
     public void OnSuccessfulParry(Attack attack)
     {
-        if (!IsParrying) return;
+        //SpawnParryFX();
+        if (!IsParrying || _parryConsumed || attack == null) return;
 
-        SoundManager.Instance.PlaySFX("ParrySuccess");
+
+        _parryConsumed = true;
+        _lastAttackId = attack.GetInstanceID();
+        //SoundManager.Instance.PlaySFX("ParrySuccess");
         attack.Neutralize();
+        SpawnParryFX();
+        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX("ParrySuccess");
 
         var enemyRoot = attack.transform.root;
         var monkey = enemyRoot.GetComponent<MonkeyEnemy1>();
@@ -141,5 +179,6 @@ public class ParryWindow : MonoBehaviour
             if (enemyAnimator != null)
                 StartCoroutine(ImmobilizeEnemy(enemyAnimator, stunSeconds));
         }
+        EndParryEarly();
     }
 }
