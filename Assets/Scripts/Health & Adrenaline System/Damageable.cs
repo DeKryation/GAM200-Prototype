@@ -10,6 +10,10 @@ public class Damageable : MonoBehaviour
     public UnityEvent<int, int> healthChanged;
     [SerializeField] private string deathFloorTag = "DeathFloor";
 
+    [SerializeField] private int contactDamage = 10;
+    [SerializeField] private float contactDamageInterval = 0.5f; // seconds between ticks
+    private float nextContactDamageTime = 0f;
+
     Animator animator;
 
     [SerializeField]
@@ -144,7 +148,32 @@ public class Damageable : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.collider.CompareTag(deathFloorTag)) Kill();
+        if (other.collider.CompareTag(deathFloorTag))
+        {
+            // Deal 10 damage with no knockback, respecting invincibility frames
+            //Hit(10, Vector2.zero);
+            TryContactDamage();
+        }
     }
+
+    private void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.collider.CompareTag(deathFloorTag))
+        {
+            TryContactDamage();
+        }
+    }
+
+    private void TryContactDamage()
+    {
+        // Only tick if global cooldown passed; Hit() will still respect invincibility
+        if (Time.time >= nextContactDamageTime)
+        {
+            // no knockback; change if you want a nudge on lava, e.g., Vector2.up * 2f
+            Hit(contactDamage, Vector2.zero);
+            nextContactDamageTime = Time.time + contactDamageInterval;
+        }
+    }
+
 
 }

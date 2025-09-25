@@ -572,8 +572,11 @@ MonoBehaviour:
   healthChanged:
     m_PersistentCalls:
       m_Calls: []
-  _maxHealth: 100
-  _health: 100
+  deathFloorTag: DeathFloor
+  contactDamage: 10
+  contactDamageInterval: 0.5
+  _maxHealth: 50
+  _health: 50
   _isAlive: 1
   IsInvincible: 0
   invincibilityTime: 0.25

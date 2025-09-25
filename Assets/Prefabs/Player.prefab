@@ -446,6 +446,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   deathFloorTag: DeathFloor
+  contactDamage: 10
+  contactDamageInterval: 0.5
   _maxHealth: 100
   _health: 100
   _isAlive: 1
@@ -562,9 +564,9 @@ PolygonCollider2D:
     m_Paths:
     - - {x: -0.8038633, y: 0.5534097}
       - {x: -0.7207251, y: -0.50797}
-      - {x: 1.2401619, y: -0.17560574}
-      - {x: 2.1003337, y: 0.81565326}
-      - {x: 2.0664992, y: 2.024634}
+      - {x: 2.4230714, y: -0.61141336}
+      - {x: 2.6917853, y: 0.47323275}
+      - {x: 2.6890821, y: 1.9001168}
       - {x: 0.49012828, y: 2.1855328}
       - {x: -0.7828636, y: 2.3266277}
   m_UseDelaunayMesh: 0
@@ -648,7 +650,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 1.8595741, y: 0.86854255}
+  m_Offset: {x: 2.9646585, y: 0.86854255}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -658,5 +660,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.2938495, y: 3.2270343}
+  m_Size: {x: 5.5040183, y: 3.2270343}
   m_EdgeRadius: 0

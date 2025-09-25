@@ -1251,14 +1251,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonkeyEnemy1 (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _health
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _maxHealth
-      value: 50
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5152,14 +5144,6 @@ PrefabInstance:
     - target: {fileID: 7905345990801645427, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
       propertyPath: m_Name
       value: MonkeyEnemy1 (5)
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _health
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _maxHealth
-      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -25185,14 +25169,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonkeyEnemy1 (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _health
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _maxHealth
-      value: 50
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -25249,14 +25225,6 @@ PrefabInstance:
     - target: {fileID: 7905345990801645427, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
       propertyPath: m_Name
       value: MonkeyEnemy1 (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _health
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _maxHealth
-      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -26080,14 +26048,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonkeyEnemy1 (7)
       objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _health
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _maxHealth
-      value: 50
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -26292,14 +26252,6 @@ PrefabInstance:
     - target: {fileID: 7905345990801645427, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
       propertyPath: m_Name
       value: MonkeyEnemy1 (6)
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _health
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _maxHealth
-      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -26507,14 +26459,6 @@ PrefabInstance:
     - target: {fileID: 7905345990801645427, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
       propertyPath: m_Name
       value: MonkeyEnemy1 (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _health
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _maxHealth
-      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -26734,7 +26678,7 @@ GameObject:
   - component: {fileID: 2140916133}
   - component: {fileID: 2140916132}
   - component: {fileID: 2140916131}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DeathFloor
   m_TagString: DeathFloor
   m_Icon: {fileID: 0}
@@ -26750,7 +26694,7 @@ Transform:
   m_GameObject: {fileID: 2140916127}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.13, y: -2.09, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -28903,14 +28847,6 @@ PrefabInstance:
     - target: {fileID: 7905345990801645427, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
       propertyPath: m_Name
       value: MonkeyEnemy1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _health
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043863513202735319, guid: 72d003fc869caa34e9081e0e6489672e, type: 3}
-      propertyPath: _maxHealth
-      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
