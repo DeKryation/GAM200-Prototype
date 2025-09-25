@@ -73,6 +73,7 @@ public class Adrenaline : MonoBehaviour
             {
                 playerController.walkSpeed = 4f;     // -2
                 playerController.airWalkSpeed = 5f; // 
+
             }
             else
             {

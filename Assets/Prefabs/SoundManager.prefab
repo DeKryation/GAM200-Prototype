@@ -93,6 +93,16 @@ MonoBehaviour:
     volume: 0.5
     pitch: 1
     loop: 0
+  - name: HeartrateUP
+    clip: {fileID: 8300000, guid: 6c0b020e60dea394aa58c0accd29e041, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+  - name: HeartrateDOWN
+    clip: {fileID: 8300000, guid: e10598016d617b445a0620ede4396afe, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
   musicSource: {fileID: 8604122282671369631}
   sfxSource: {fileID: 2813949343350935384}
 --- !u!1 &6321321363856608070

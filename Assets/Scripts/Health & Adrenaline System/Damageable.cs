@@ -8,6 +8,7 @@ public class Damageable : MonoBehaviour
     public UnityEvent<int, Vector2> damageableHit;
     public UnityEvent damageableDeath;
     public UnityEvent<int, int> healthChanged;
+    [SerializeField] private string deathFloorTag = "DeathFloor";
 
     Animator animator;
 
@@ -67,6 +68,7 @@ public class Damageable : MonoBehaviour
         {
             _isAlive = value;
             animator.SetBool(AnimationStrings.isAlive, value);
+            if (!value) damageableDeath?.Invoke();
         }
     }
 
@@ -132,6 +134,17 @@ public class Damageable : MonoBehaviour
             Health += actualHeal;
             CharacterEvents.characterHealed(gameObject, healthRestore);
         }
+    }
+
+    public void Kill()
+    {
+        if (!IsAlive) return;
+        Health = 0;                // setter will flip IsAlive and fire events
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.collider.CompareTag(deathFloorTag)) Kill();
     }
 
 }
