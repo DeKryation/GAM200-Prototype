@@ -8,7 +8,9 @@ public class Adrenaline : MonoBehaviour
     [SerializeField] private int startAdrenaline = 75;
     [SerializeField] private float decreaseRate = 5f; // units per second when idle
     [SerializeField] private float increaseRate = 5f; // units per second when moving 
-    [SerializeField] private bool isMoving = true; 
+    [SerializeField] private bool isMoving = true;
+
+    public float DamageMultiplier { get; private set; } = 1f;
 
     private PlayerController playerController; //SPEED MODIFICATIOn
     public int CurrentAdrenaline { get; private set; }
@@ -66,19 +68,21 @@ public class Adrenaline : MonoBehaviour
         {
             if (CurrentAdrenaline > 2000)
             {
-                playerController.walkSpeed = 8f;     // +2
-                playerController.airWalkSpeed = 5f; // 
+                playerController.walkSpeed = 8f;
+                playerController.airWalkSpeed = 6f;
+                DamageMultiplier = 2f;  // double damage
             }
             else if (CurrentAdrenaline <= 1000)
             {
-                playerController.walkSpeed = 4f;     // -2
-                playerController.airWalkSpeed = 5f; // 
-
+                playerController.walkSpeed = 4f;
+                playerController.airWalkSpeed = 4f;
+                DamageMultiplier = 0.5f; // half damage
             }
             else
             {
-                playerController.walkSpeed = 6f;     // normal
-                playerController.airWalkSpeed = 5f; // normal
+                playerController.walkSpeed = 6f;
+                playerController.airWalkSpeed = 5f;
+                DamageMultiplier = 1f; // normal damage
             }
         }
 
