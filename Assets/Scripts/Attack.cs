@@ -47,6 +47,7 @@ public class Attack : MonoBehaviour
     {
         if (_neutralized) return;
 
+        // --- Parry handling ---
         var parry = collision.GetComponent<ParryWindow>()
                     ?? collision.GetComponentInParent<ParryWindow>();
         if (parry != null && parry.IsParrying)
@@ -55,16 +56,32 @@ public class Attack : MonoBehaviour
             return;
         }
 
+        // --- Damage handling ---
         var damageable = collision.GetComponent<Damageable>()
                          ?? collision.GetComponentInParent<Damageable>();
         if (damageable != null)
         {
+            // Apply adrenaline multiplier if present
+            int finalDamage = attackDamage;
+            var adrenaline = GetComponentInParent<Adrenaline>();
+            if (adrenaline != null)
+            {
+                if (adrenaline.CurrentAdrenaline > 2000)
+                {
+                    finalDamage = Mathf.RoundToInt(attackDamage * 2f); // boosted
+                }
+                else if (adrenaline.CurrentAdrenaline <= 1000)
+                {
+                    finalDamage = Mathf.RoundToInt(attackDamage * 0.5f); // reduced
+                }
+            }
+
             Vector2 deliveredKnockback =
                 transform.parent.localScale.x > 0
                     ? knockback
                     : new Vector2(-knockback.x, -knockback.y);
 
-            damageable.Hit(attackDamage, deliveredKnockback);
+            damageable.Hit(finalDamage, deliveredKnockback);
         }
     }
 }
