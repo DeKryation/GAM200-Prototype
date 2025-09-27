@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 7
-  jumpImpulse: 18.5
+  jumpImpulse: 18
   airWalkSpeed: 5
   dashDuration: 0.2
   dashForce: 15

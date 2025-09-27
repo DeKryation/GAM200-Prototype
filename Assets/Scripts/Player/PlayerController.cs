@@ -103,13 +103,12 @@ public class PlayerController : MonoBehaviour
         {
             if (isDashing)
             {
-                // keep dash velocity until dash ends
                 if (Time.time >= dashEndTime)
                     isDashing = false;
+                // do not touch rb.linearVelocity at all keeps momentum
             }
             else
             {
-                // normal movement
                 rb.linearVelocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.linearVelocity.y);
             }
         }
