@@ -163,6 +163,8 @@ MonoBehaviour:
   decreaseRate: 100
   increaseRate: 75
   isMoving: 0
+  dieOnZero: 1
+  deathThreshold: 3000
   adrenalineChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -424,6 +426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6384c108198eb834a95b9db55e241621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  routeDamageToAdrenaline: 1
   damageableHit:
     m_PersistentCalls:
       m_Calls:
@@ -446,7 +449,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   deathFloorTag: DeathFloor
-  contactDamage: 10
+  contactDamage: 100
   contactDamageInterval: 0.5
   _maxHealth: 100
   _health: 100

@@ -301,7 +301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 606bf492ef3cf3146876b5eb45e8e77b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 10
+  attackDamage: 100
   knockback: {x: 5, y: 2}
 --- !u!1 &7905345990801645427
 GameObject:
@@ -551,6 +551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6384c108198eb834a95b9db55e241621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  routeDamageToAdrenaline: 0
   damageableHit:
     m_PersistentCalls:
       m_Calls:

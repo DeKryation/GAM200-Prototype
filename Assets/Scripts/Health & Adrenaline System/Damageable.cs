@@ -3,8 +3,14 @@ using Assets.Scripts.Events;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(Animator))]
 public class Damageable : MonoBehaviour
 {
+
+    [Header("Adrenaline Health Mode")]
+    [SerializeField] private bool routeDamageToAdrenaline = false; // enable on Player
+    private Adrenaline _adren;
+
     public UnityEvent<int, Vector2> damageableHit;
     public UnityEvent damageableDeath;
     public UnityEvent<int, int> healthChanged;
@@ -92,6 +98,13 @@ public class Damageable : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        _adren = GetComponent<Adrenaline>(); // may be null on enemies
+        // If routing, pin Health to a harmless value so legacy UI/logic won't kill you.
+        if (routeDamageToAdrenaline)
+        {
+            _maxHealth = 1;
+            _health = 1;
+        }
     }
 
     private void Update()
@@ -113,19 +126,33 @@ public class Damageable : MonoBehaviour
     {
         if (IsAlive && !IsInvincible)
         {
-            Health -= damage;
-            IsInvincible = true;
+            int appliedDamage = 0;
 
+            if (TryGetComponent<Adrenaline>(out var adren) && adren != null)
+            {
+                appliedDamage = adren.TakeDamage(damage);   // drain adrenaline
+            }
+            else
+            {
+                int before = Health;
+                Health -= damage;
+                appliedDamage = Mathf.Max(0, before - Health);
+            }
+
+            IsInvincible = true;
 
             animator.SetTrigger(AnimationStrings.hitTrigger);
             LockVelocity = true;
-            damageableHit?.Invoke(damage, knockback);
-            CharacterEvents.characterDamaged.Invoke(gameObject, damage);
 
+            // Use the amount that actually applied
+            if (appliedDamage > 0)
+            {
+                damageableHit?.Invoke(appliedDamage, knockback);
+                CharacterEvents.characterDamaged?.Invoke(gameObject, appliedDamage);
+            }
 
             return true;
         }
-
         return false;
     }
 
@@ -136,7 +163,7 @@ public class Damageable : MonoBehaviour
             int maxHeal = Mathf.Max(MaxHealth - Health, 0);
             int actualHeal = Mathf.Min(maxHeal, healthRestore);
             Health += actualHeal;
-            CharacterEvents.characterHealed(gameObject, healthRestore);
+            CharacterEvents.characterHealed?.Invoke(gameObject, actualHeal); // was healthRestore
         }
     }
 

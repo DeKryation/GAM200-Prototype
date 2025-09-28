@@ -12,16 +12,27 @@ public class AdrenalineBar : MonoBehaviour
     private void Awake()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-            adrenaline = player.GetComponent<Adrenaline>();
+        adrenaline = player ? player.GetComponent<Adrenaline>() : null;
+
+        if (adrenaline == null)
+        {
+            gameObject.SetActive(false); // no adrenaline source? hide bar
+            return;
+        }
+
+        adrenalineSlider.minValue = 0f;
+        adrenalineSlider.maxValue = 1f;
+        adrenalineSlider.value = Calculate(adrenaline.CurrentAdrenaline, adrenaline.MaxAdrenaline);
+        adrenalineText.text = "ADREN " + adrenaline.CurrentAdrenaline + " / " + adrenaline.MaxAdrenaline;
     }
 
     private void Start()
     {
         if (adrenaline != null)
         {
-            adrenalineSlider.value = Calculate(adrenaline.CurrentAdrenaline, 150);
-            adrenalineText.text = "HEARTRATE " + adrenaline.CurrentAdrenaline + " / 150";
+            // use runtime max instead of hardcoded 150
+            adrenalineSlider.value = Calculate(adrenaline.CurrentAdrenaline, adrenaline.MaxAdrenaline);
+            adrenalineText.text = "ADREN " + adrenaline.CurrentAdrenaline + " / " + adrenaline.MaxAdrenaline;
         }
     }
 
@@ -37,7 +48,7 @@ public class AdrenalineBar : MonoBehaviour
             adrenaline.adrenalineChanged.RemoveListener(OnAdrenalineChanged);
     }
 
-    private float Calculate(float current, float max) => current / max;
+    private float Calculate(float current, float max) => max <= 0 ? 0 : current / max;
 
     private void OnAdrenalineChanged(int newVal, int maxVal)
     {

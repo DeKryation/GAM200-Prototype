@@ -192,7 +192,7 @@ public class PlayerController : MonoBehaviour
     public void OnHit(int damage, Vector2 knockback)
     {
         rb.linearVelocity = new Vector2(knockback.x, rb.linearVelocity.y + knockback.y);
-        GetComponent<Adrenaline>()?.AddAdrenaline(-100);
+        GetComponent<Adrenaline>()?.AddAdrenaline(0);
     }
 
     public void OnParry(InputAction.CallbackContext context)
