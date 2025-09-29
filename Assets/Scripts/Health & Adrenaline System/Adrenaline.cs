@@ -27,6 +27,8 @@ public class Adrenaline : MonoBehaviour
 
     private Damageable damageable;
 
+    private float _fractionCarry = 0f;
+
     private void Awake()
     {
         CurrentAdrenaline = startAdrenaline;
@@ -82,43 +84,52 @@ public class Adrenaline : MonoBehaviour
 
     private void ModifyAdrenaline(float amount)
     {
-        int newVal = Mathf.Clamp(Mathf.RoundToInt(CurrentAdrenaline + amount), 0, maxAdrenaline);
-        if (newVal != CurrentAdrenaline)
+        _fractionCarry += amount;
+
+        // Convert ONLY the whole-number portion into an int delta, keep the fraction for later
+        int wholeDelta = (int)_fractionCarry; // truncates toward 0 (works for pos & neg)
+        if (wholeDelta != 0)
         {
-            CurrentAdrenaline = newVal;
-            adrenalineChanged?.Invoke(CurrentAdrenaline, maxAdrenaline);
+            _fractionCarry -= wholeDelta;
 
-            if (dieOnZero && CurrentAdrenaline <= 0)
-                KillPlayer();
-            else if (CurrentAdrenaline >= deathThreshold)
-                KillPlayer();
+            int newVal = Mathf.Clamp(CurrentAdrenaline + wholeDelta, 0, maxAdrenaline);
+            if (newVal != CurrentAdrenaline)
+            {
+                CurrentAdrenaline = newVal;
+                adrenalineChanged?.Invoke(CurrentAdrenaline, maxAdrenaline);
+
+                // Death rules (only check on actual integer changes)
+                if ((dieOnZero && CurrentAdrenaline <= 0) || CurrentAdrenaline >= deathThreshold)
+                    KillPlayer();
+            }
+
+            // Speed & damage tiers (also only recompute when value actually changed)
+            if (playerController != null)
+            {
+                if (CurrentAdrenaline > 2000)
+                {
+                    playerController.walkSpeed = 8f;
+                    playerController.airWalkSpeed = 6f;
+                    DamageMultiplier = 2f;   // double damage
+                }
+                else if (CurrentAdrenaline <= 1000)
+                {
+                    playerController.walkSpeed = 4f;
+                    playerController.airWalkSpeed = 4f;
+                    DamageMultiplier = 0.5f; // half damage
+                }
+                else
+                {
+                    playerController.walkSpeed = 6f;
+                    playerController.airWalkSpeed = 5f;
+                    DamageMultiplier = 1f;   // normal damage
+                }
+            }
         }
-
-
-        // speed boost check
-        if (playerController != null)
-        {
-            if (CurrentAdrenaline > 2000)
-            {
-                playerController.walkSpeed = 8f;
-                playerController.airWalkSpeed = 6f;
-                DamageMultiplier = 2f;  // double damage
-            }
-            else if (CurrentAdrenaline <= 1000)
-            {
-                playerController.walkSpeed = 4f;
-                playerController.airWalkSpeed = 4f;
-                DamageMultiplier = 0.5f; // half damage
-            }
-            else
-            {
-                playerController.walkSpeed = 6f;
-                playerController.airWalkSpeed = 5f;
-                DamageMultiplier = 1f; // normal damage
-            }
-        }
-
+        // If wholeDelta == 0, we changed by <1 this frame — keep accumulating quietly.
     }
+
+
 
     private void KillPlayer()
     {

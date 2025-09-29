@@ -160,8 +160,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxAdrenaline: 3000
   startAdrenaline: 1500
-  decreaseRate: 100
-  increaseRate: 75
+  decreaseRate: 110
+  increaseRate: 65
   isMoving: 0
   dieOnZero: 1
   deathThreshold: 3000
