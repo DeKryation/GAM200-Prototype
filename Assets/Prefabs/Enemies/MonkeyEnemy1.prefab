@@ -174,7 +174,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -1.1302912, y: 0.0588696}
+  m_Offset: {x: -1.8735547, y: -0.30647397}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -184,7 +184,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.4489655, y: 2.2951245}
+  m_Size: {x: 2.1135259, y: 3.0258117}
   m_EdgeRadius: 0
 --- !u!114 &4351319214276512492
 MonoBehaviour:
@@ -281,13 +281,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.2841673, y: 1.406807}
-      - {x: -1.770761, y: 1.4393027}
-      - {x: -1.3790131, y: 0.0353501}
-      - {x: -1.094552, y: -0.5585471}
-      - {x: 0.4887519, y: -1.0566742}
-      - {x: 0.87439156, y: -0.2814814}
-      - {x: 0.4752617, y: 0.7694146}
+    - - {x: -1.4684019, y: 0.39896202}
+      - {x: -2.0479217, y: 0.33067334}
+      - {x: -3.6718595, y: -0.8969075}
+      - {x: -4.4204187, y: -1.6167839}
+      - {x: -1.7032952, y: -1.132262}
+      - {x: -1.2168865, y: -0.60903084}
+      - {x: -1.2632636, y: -0.18803835}
   m_UseDelaunayMesh: 0
 --- !u!114 &2956900777313243120
 MonoBehaviour:
@@ -338,7 +338,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 12.38, y: -1.84, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4186932013887660452}
@@ -392,7 +392,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_Sprite: {fileID: -2119017571, guid: 19463238e58a1904ab16e5e9a778cdf5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 7.5, y: 5}
@@ -462,8 +462,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.122134686, y: -0.019723177}
-  m_Size: {x: 1.2854509, y: 2.3898807}
+  m_Offset: {x: 0.21705627, y: -0.8355055}
+  m_Size: {x: 1.7879333, y: 2.3883495}
   m_Direction: 0
 --- !u!114 &9185199544276898466
 MonoBehaviour:
