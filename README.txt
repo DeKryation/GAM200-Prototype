@@ -1,6 +1,6 @@
 *Description of Game*:
 
-Your heartbeat is your weapon in this fast-paced action-platformer. Keep moving and fighting to raise your heartrate, then harness it to dash farther, leap wider, and survive deadly traps. Collect bananas to restore health, outsmart enemies with attacks and parries, and push toward the Exit Door. But beware of one wrong step on the red floors or too mmuch damage, and it's back to the start.
+Your heartbeat is your weapon in this fast-paced action-platformer. Keep moving and fighting to raise your heartrate, then harness it to dash farther, leap wider, and survive deadly traps. Collect bananas to restore health, outsmart enemies with attacks and parries, and push toward the Exit Door. But beware of one wrong step on the red floors or too much damage, and it's back to the start.
 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
