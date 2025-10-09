@@ -130,7 +130,7 @@ public class Damageable : MonoBehaviour
 
             if (TryGetComponent<Adrenaline>(out var adren) && adren != null)
             {
-                appliedDamage = adren.TakeDamage(damage);   // drain adrenaline
+                appliedDamage = adren.HealAdrenaline(damage);   // drain adrenaline
             }
             else
             {

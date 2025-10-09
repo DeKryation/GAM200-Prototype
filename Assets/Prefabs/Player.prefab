@@ -144,6 +144,7 @@ MonoBehaviour:
   dashDuration: 0.2
   dashForce: 15
   dashCooldown: 2
+  attackCooldownSeconds: 1
   _isMoving: 0
   _isFacingRight: 0
 --- !u!114 &3450044499224201180
@@ -449,7 +450,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   deathFloorTag: DeathFloor
-  contactDamage: 100
+  contactDamage: 50
   contactDamageInterval: 0.5
   _maxHealth: 100
   _health: 100

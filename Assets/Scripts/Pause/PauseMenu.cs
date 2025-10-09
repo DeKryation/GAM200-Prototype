@@ -64,16 +64,26 @@ public class PauseMenu : MonoBehaviour
 
     public void LoadMainMenu()  // Load to Main Menu
     {
+        Resume();
         Time.timeScale = 1f;
         SceneManager.LoadScene("Edris' Scene");
     }
-}
 
-    // IF the pause menu requires a quit button function to quit the entire game directly.
-    /* public void QuitGame()
+    public void RestartLevel()
     {
-        Debug.Log("Quitting game...");
-        Application.Quit();
+        Resume();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
-    */
+
+
+
+// IF the pause menu requires a quit button function to quit the entire game directly.
+/* public void QuitGame()
+{
+    Debug.Log("Quitting game...");
+    Application.Quit();
+}
+}
+*/

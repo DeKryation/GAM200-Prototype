@@ -22,6 +22,11 @@ public class PlayerController : MonoBehaviour
     TouchingDirections touchingDirections;
     Damageable damageable;
 
+    [Header("Attack")]
+    [SerializeField] private float attackCooldownSeconds = 0.40f;
+    private float _attackCooldownRemaining = 0f;
+    public bool CanAttack => _attackCooldownRemaining <= 0f;
+
     [SerializeField]
     private bool _isMoving = false;
 
@@ -96,6 +101,18 @@ public class PlayerController : MonoBehaviour
         touchingDirections = GetComponent<TouchingDirections>();
         damageable = GetComponent<Damageable>();
     }
+    private void Update()
+    {
+        // Count down the attack cooldown
+        if (_attackCooldownRemaining > 0f)
+        {
+            _attackCooldownRemaining -= Time.unscaledDeltaTime; // keeps ticking even if timescale changes
+            if (_attackCooldownRemaining < 0f) _attackCooldownRemaining = 0f;
+        }
+
+        // Push seconds-remaining into Animator (optional but useful for UI/Transitions)
+        animator.SetFloat(AnimationStrings.attackCooldown, _attackCooldownRemaining);
+    }
 
     private void FixedUpdate()
     {
@@ -106,6 +123,7 @@ public class PlayerController : MonoBehaviour
                 if (Time.time >= dashEndTime)
                     isDashing = false;
                 // do not touch rb.linearVelocity at all keeps momentum
+
             }
             else
             {
@@ -165,9 +183,26 @@ public class PlayerController : MonoBehaviour
     {
         if (PauseMenu.GameIsPaused) return;
 
-        if (context.started)
+        if (context.started && IsAlive && canMove && CanAttack)
         {
-            animator.SetTrigger(AnimationStrings.attackTrigger);
+            // consider "W held" as up-intent
+            bool upIntent = moveInput.y > 0.5f
+#if ENABLE_INPUT_SYSTEM
+                            || (Keyboard.current != null && Keyboard.current.wKey.isPressed)
+#endif
+                            ;
+
+            if (upIntent)
+            {
+                animator.SetTrigger(Assets.Scripts.AnimationStrings.attackUpTrigger);
+            }
+            else
+            {
+                animator.SetTrigger(Assets.Scripts.AnimationStrings.attackTrigger);
+            }
+
+            _attackCooldownRemaining = attackCooldownSeconds;
+            // SoundManager.Instance?.PlaySFX("PlayerAttackBasic");
         }
     }
 
@@ -184,7 +219,7 @@ public class PlayerController : MonoBehaviour
             lastDashTime = Time.time;
 
             Debug.Log($"DASH PERFORMED at {Time.time}, direction: {(IsFacingRight ? "Right" : "Left")}");
-            GetComponent<Adrenaline>()?.AddAdrenaline(50);
+            GetComponent<Adrenaline>()?.AddAdrenaline(35);
             Debug.Log("Adrenaline +50 from dash");
         }
     }
