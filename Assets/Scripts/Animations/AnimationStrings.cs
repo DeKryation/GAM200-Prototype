@@ -26,5 +26,6 @@ namespace Assets.Scripts
         internal static string parryTrigger = "parry";
         internal static string canAttack = "canAttack";
         internal static string attackUpTrigger = "attackUp";
+        internal static string attackDownTrigger = "attackDown";
     }
 }

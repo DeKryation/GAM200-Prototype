@@ -185,14 +185,26 @@ public class PlayerController : MonoBehaviour
 
         if (context.started && IsAlive && canMove && CanAttack)
         {
-            // consider "W held" as up-intent
-            bool upIntent = moveInput.y > 0.5f
+            // intent checks
+            bool upIntent =
+                moveInput.y > 0.5f
 #if ENABLE_INPUT_SYSTEM
-                            || (Keyboard.current != null && Keyboard.current.wKey.isPressed)
+                || (Keyboard.current != null && Keyboard.current.wKey.isPressed)
 #endif
-                            ;
+                ;
 
-            if (upIntent)
+            bool downIntent =
+                moveInput.y < -0.5f
+#if ENABLE_INPUT_SYSTEM
+                || (Keyboard.current != null && Keyboard.current.sKey.isPressed)
+#endif
+                ;
+
+            if (downIntent)
+            {
+                animator.SetTrigger(Assets.Scripts.AnimationStrings.attackDownTrigger);
+            }
+            else if (upIntent)
             {
                 animator.SetTrigger(Assets.Scripts.AnimationStrings.attackUpTrigger);
             }
