@@ -93,6 +93,16 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D rb;
     Animator animator;
+    // === Helpers (place inside the class) ===
+
+    // Exact state names from your Animator. Change if yours differ.
+    private const string State_Attack1 = "player_attack";
+    private const string State_Attack2 = "player_attack_2";
+    private const string State_Attack3 = "player_attack_3";
+    [SerializeField] private bool _comboActive = false;
+    [SerializeField] private int _comboStep = 0;
+    [SerializeField] private bool _queuedNextAttack = false;
+    [SerializeField] private float comboAdvanceThreshold = 0.98f;
 
     private void Awake()
     {
@@ -101,17 +111,63 @@ public class PlayerController : MonoBehaviour
         touchingDirections = GetComponent<TouchingDirections>();
         damageable = GetComponent<Damageable>();
     }
+    private bool IsInAttackState()
+    {
+        var info = animator.GetCurrentAnimatorStateInfo(0);
+        return info.IsName(State_Attack1) || info.IsName(State_Attack2) || info.IsName(State_Attack3) || info.IsTag("Attack");
+    }
     private void Update()
     {
-        // Count down the attack cooldown
+        // existing cooldown ticking
         if (_attackCooldownRemaining > 0f)
         {
-            _attackCooldownRemaining -= Time.unscaledDeltaTime; // keeps ticking even if timescale changes
+            _attackCooldownRemaining -= Time.unscaledDeltaTime;
             if (_attackCooldownRemaining < 0f) _attackCooldownRemaining = 0f;
         }
 
-        // Push seconds-remaining into Animator (optional but useful for UI/Transitions)
         animator.SetFloat(AnimationStrings.attackCooldown, _attackCooldownRemaining);
+
+        // NEW: if we just left the combo, start the cooldown now
+        HandleComboEndCooldown();
+        TryAdvanceQueuedCombo();
+    }
+    private void TryAdvanceQueuedCombo()
+    {
+        if (!_queuedNextAttack) return;
+
+        var st = animator.GetCurrentAnimatorStateInfo(0);
+        // wait until the clip is basically done and not mid-blend
+        if (st.normalizedTime < comboAdvanceThreshold || animator.IsInTransition(0)) return;
+
+        if (st.IsName(State_Attack1))
+        {
+            animator.CrossFadeInFixedTime(State_Attack2, 0.05f, 0);
+            _queuedNextAttack = false;
+        }
+        else if (st.IsName(State_Attack2))
+        {
+            animator.CrossFadeInFixedTime(State_Attack3, 0.05f, 0);
+            _queuedNextAttack = false;
+        }
+        else
+        {
+            // left the combo path
+            _queuedNextAttack = false;
+        }
+    }
+    private void HandleComboEndCooldown()
+    {
+        if (!_comboActive) return;
+
+        // We consider the combo "ended" when we're no longer in any attack state,
+        // and we're not mid-transition between attack states.
+        bool inTransition = animator.IsInTransition(0);
+        if (!IsInAttackState() && !inTransition)
+        {
+            _attackCooldownRemaining = attackCooldownSeconds; // start post-combo cooldown
+            _comboActive = false;
+            _comboStep = 0;
+        }
     }
 
     private void FixedUpdate()
@@ -183,9 +239,18 @@ public class PlayerController : MonoBehaviour
     {
         if (PauseMenu.GameIsPaused) return;
 
-        if (context.started && IsAlive && canMove && CanAttack)
+        if (context.started && IsAlive && canMove && (CanAttack || IsInAttackState()))
         {
-            // intent checks
+            var st = animator.GetCurrentAnimatorStateInfo(0);
+
+            // --- CHAINING: queue next attack; we’ll hop when this clip finishes ---
+            if (st.IsName(State_Attack1) || st.IsName(State_Attack2))
+            {
+                _queuedNextAttack = true;   // <<-- was CrossFade; now we queue
+                return;                     // don't touch cooldown while chaining
+            }
+
+            // --- NEW COMBO START (your existing intent + cooldown) ---
             bool upIntent =
                 moveInput.y > 0.5f
 #if ENABLE_INPUT_SYSTEM
@@ -201,22 +266,16 @@ public class PlayerController : MonoBehaviour
                 ;
 
             if (downIntent)
-            {
                 animator.SetTrigger(Assets.Scripts.AnimationStrings.attackDownTrigger);
-            }
             else if (upIntent)
-            {
                 animator.SetTrigger(Assets.Scripts.AnimationStrings.attackUpTrigger);
-            }
             else
-            {
                 animator.SetTrigger(Assets.Scripts.AnimationStrings.attackTrigger);
-            }
 
-            _attackCooldownRemaining = attackCooldownSeconds;
-            // SoundManager.Instance?.PlaySFX("PlayerAttackBasic");
+            _attackCooldownRemaining = attackCooldownSeconds; // keep your current cooldown behavior
         }
     }
+
 
     public void OnDash(InputAction.CallbackContext context)
     {
