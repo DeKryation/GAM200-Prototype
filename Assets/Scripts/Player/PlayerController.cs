@@ -113,6 +113,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _queuedNextAttack = false;
     [SerializeField] private float comboAdvanceThreshold = 0.98f;
     [SerializeField] private bool _wasInAttack3 = false;
+    [SerializeField] private bool _awaitingPostComboCooldown = false;
 
     private void Awake()
     {
@@ -135,7 +136,7 @@ public class PlayerController : MonoBehaviour
         // START: This is to set active for the interaction for Dialogue.
         if (Input.GetKeyDown(KeyCode.E))
         {
-                Interactable?.Interact(player: this);
+            Interactable?.Interact(player: this);
         }
         // END:
 
@@ -152,6 +153,7 @@ public class PlayerController : MonoBehaviour
         // NEW: if we just left the combo, start the cooldown now
         HandleComboEndCooldown();
         TryAdvanceQueuedCombo();
+        ApplyPostComboCooldownIfFinished();
     }
     private void TryAdvanceQueuedCombo()
     {
@@ -170,10 +172,39 @@ public class PlayerController : MonoBehaviour
         {
             animator.CrossFadeInFixedTime(State_Attack3, 0.05f, 0);
             _queuedNextAttack = false;
+            _awaitingPostComboCooldown = true;   // <<< arm post-combo lock
         }
         else
         {
             // left the combo path
+            _queuedNextAttack = false;
+        }
+    }
+    private void ApplyPostComboCooldownIfFinished()
+    {
+        if (!_awaitingPostComboCooldown) return;
+
+        var st = animator.GetCurrentAnimatorStateInfo(0);
+
+        // Primary: still in attack_3 and its clip has essentially finished
+        if (st.IsName(State_Attack3) && st.normalizedTime >= 0.98f && !animator.IsInTransition(0))
+        {
+            _attackCooldownRemaining = attackCooldownSeconds;   // start lockout NOW
+            _awaitingPostComboCooldown = false;
+            _comboActive = false;
+            _comboStep = 0;
+            _queuedNextAttack = false;
+            return;
+        }
+
+        // Fallback: if we already left attack_3 to a non-attack state, still enforce it
+        bool inAnyAttack = st.IsName(State_Attack1) || st.IsName(State_Attack2) || st.IsName(State_Attack3) || st.IsTag("Attack");
+        if (!inAnyAttack && !animator.IsInTransition(0))
+        {
+            _attackCooldownRemaining = Mathf.Max(_attackCooldownRemaining, attackCooldownSeconds);
+            _awaitingPostComboCooldown = false;
+            _comboActive = false;
+            _comboStep = 0;
             _queuedNextAttack = false;
         }
     }
@@ -225,7 +256,7 @@ public class PlayerController : MonoBehaviour
         if (PauseMenu.GameIsPaused) return;
 
         // START: Prevent movement if dialogue is open
-        if (dialogueUI != null && dialogueUI.IsOpen) 
+        if (dialogueUI != null && dialogueUI.IsOpen)
         {
             moveInput = Vector2.zero;
             IsMoving = false;
@@ -282,19 +313,27 @@ public class PlayerController : MonoBehaviour
     {
         if (PauseMenu.GameIsPaused) return;
 
-        if (context.started && IsAlive && canMove && (CanAttack || IsInAttackState()))
+        if (context.started && IsAlive)
         {
             var st = animator.GetCurrentAnimatorStateInfo(0);
 
-            // --- CHAINING: queue next attack; we’ll hop when this clip finishes ---
-            if (st.IsName(State_Attack1) || st.IsName(State_Attack2))
+            // If we're in ANY attack state, handle chaining/ignore appropriately
+            if (IsInAttackState())
             {
-                _queuedNextAttack = true;
-                _comboActive = true;              // NEW
+                // Chain only from attack_1 or attack_2 (queue next hit)
+                if (st.IsName(State_Attack1) || st.IsName(State_Attack2))
+                {
+                    _queuedNextAttack = true;
+                    _comboActive = true;
+                }
+                // If we're already in attack_3, DO NOTHING wait for cooldown
+                // This prevents a new combo from starting during attack_3.
                 return;
             }
 
-            // --- NEW COMBO START (your existing intent + cooldown) ---
+            // Not in an attack state starting a new combo requires both CanAttack AND canMove
+            if (!(CanAttack && canMove)) return;
+
             bool upIntent =
                 moveInput.y > 0.5f
 #if ENABLE_INPUT_SYSTEM
@@ -310,14 +349,14 @@ public class PlayerController : MonoBehaviour
                 ;
 
             if (downIntent)
-                animator.SetTrigger(Assets.Scripts.AnimationStrings.attackDownTrigger);
+                animator.SetTrigger(AnimationStrings.attackDownTrigger);
             else if (upIntent)
-                animator.SetTrigger(Assets.Scripts.AnimationStrings.attackUpTrigger);
+                animator.SetTrigger(AnimationStrings.attackUpTrigger);
             else
-                animator.SetTrigger(Assets.Scripts.AnimationStrings.attackTrigger);
+                animator.SetTrigger(AnimationStrings.attackTrigger);
 
             _comboActive = true;
-            _attackCooldownRemaining = attackCooldownSeconds; // keep your current cooldown behavior
+            _attackCooldownRemaining = attackCooldownSeconds; // keep your existing startcooldown
         }
     }
 
@@ -361,5 +400,9 @@ public class PlayerController : MonoBehaviour
             var parry = GetComponent<ParryWindow>();
             if (parry != null) parry.StartParry();
         }
+    }
+    public void StartPostComboCooldown()
+    {
+        _attackCooldownRemaining = Mathf.Max(_attackCooldownRemaining, attackCooldownSeconds);
     }
 }
