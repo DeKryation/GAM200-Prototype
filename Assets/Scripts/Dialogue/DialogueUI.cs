@@ -31,6 +31,11 @@ public class DialogueUI : MonoBehaviour
         StartCoroutine(StepThroughDialogue(dialogueObject));
     }
 
+    public void AddResponseEvents(ResponseEvent[] responseEvents)   // Method to add response events to the response handler
+    {
+        responseHandler.AddResponseEvents(responseEvents);
+    }
+
     private IEnumerator StepThroughDialogue(DialogueObject dialogueObject)
     {
         // yield return new WaitForSeconds(2);  // Optional delay before starting the effect
@@ -38,10 +43,14 @@ public class DialogueUI : MonoBehaviour
         for (int i = 0; i < dialogueObject.Dialogue.Length; i++)
         {
             string dialogue = dialogueObject.Dialogue[i];
-            yield return typewriterEffect.Run(dialogue, textLabel);     // Start the typewriter effect for the current dialogue line to end
+
+            yield return RunTypingEffect(dialogue); // Wait for the typing effect to complete
+
+            textLabel.text = dialogue; // Ensure the full dialogue is displayed after typing effect
 
             if (i == dialogueObject.Dialogue.Length - 1 && dialogueObject.Responses != null && dialogueObject.HasResponses) break; // If it's the last line and there are responses, break to show responses
 
+            yield return null; // Wait one frame before checking for input
             yield return new WaitUntil(() =>
             Input.GetKeyDown(KeyCode.Space) ||  // Wait until the player presses the 'Space' key to continue
             Input.GetMouseButtonDown(0) // or player presses the left mouse button to continue
@@ -58,7 +67,22 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
-    private void CloseDialogueBox()
+    private IEnumerator RunTypingEffect(string dialogue)
+    {
+        typewriterEffect.Run(dialogue, textLabel);
+
+        while (typewriterEffect.IsRunning)
+        {
+            yield return null; // Wait until the typing effect is complete
+
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) // Allow skipping the typing effect
+            {
+                typewriterEffect.OnParticleSystemStopped(); // Stop the typing effect
+            }
+        }
+    }
+
+    public void CloseDialogueBox()
     {
         IsOpen = false;
         dialogueBox.SetActive(false);

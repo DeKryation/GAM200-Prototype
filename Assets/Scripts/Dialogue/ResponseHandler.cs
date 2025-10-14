@@ -11,6 +11,7 @@ public class ResponseHandler : MonoBehaviour
     [SerializeField] private RectTransform responseContainer;
 
     private DialogueUI dialogueUI;
+    private ResponseEvent[] responseEvents; // Array to hold response events, if needed in future.
 
     private List<GameObject> tempResponseButtons = new List<GameObject>();  // List to keep track of temporary response buttons for cleanup.
 
@@ -20,16 +21,24 @@ public class ResponseHandler : MonoBehaviour
         responseButtonTemplate.gameObject.SetActive(false); // Ensure template is hidden
     }
 
+    public void AddResponseEvents(ResponseEvent[] events)
+    {
+        this.responseEvents = events;   // Use the parameter, not the field
+    }
+
     public void ShowResponses(Response[] responses)
     {
         float responseBoxHeight = 0;    // Variable to keep track of the total height of the response box.
 
-        foreach (Response response in responses)
+        for (int i = 0; i < responses.Length; i++)   // Loop through each response to create a button.
         {
+            Response response = responses[i];
+            int responseIndex = i;
+
             GameObject responseButton = Instantiate(responseButtonTemplate.gameObject, responseContainer);  // Instantiate a new button from the template.
             responseButton.gameObject.SetActive(true);
             responseButton.GetComponent<TMP_Text>().text = response.ResponseText;   // Set the button text to the response text.
-            responseButton.GetComponent<Button>().onClick.AddListener(() => OnPickedResponse(response));    // Add listener for button click event, don't have to manually input in the inspector "On click ()" part because it's done in code.
+            responseButton.GetComponent<Button>().onClick.AddListener(() => OnPickedResponse(response, responseIndex));    // Add listener for button click event, don't have to manually input in the inspector "On click ()" part because it's done in code.
 
             tempResponseButtons.Add(responseButton); // Add the button to the list of temporary buttons for later cleanup.
 
@@ -40,7 +49,7 @@ public class ResponseHandler : MonoBehaviour
         responseBox.gameObject.SetActive(true);
     }
 
-    private void OnPickedResponse(Response response)    // Method to handle the event when a response is picked.
+    private void OnPickedResponse(Response response, int responseIndex)    // Method to handle the event when a response is picked.
     {
         responseBox.gameObject.SetActive(false);   // Hide the response box.
 
@@ -50,6 +59,21 @@ public class ResponseHandler : MonoBehaviour
         }
         tempResponseButtons.Clear();
 
-        dialogueUI.ShowDialogue(response.DialogueObject);   // Show the dialogue associated with the picked response.
+        // Trigger the UnityEvent for the picked response, if available
+        if (responseEvents != null && responseIndex >= 0 && responseIndex < responseEvents.Length)
+        {
+            responseEvents[responseIndex].OnPickedResponse?.Invoke();
+        }
+
+        responseEvents = null; // Clear the response events after one use to avoid unintended reuse.
+
+        if(response.DialogueObject)
+        {
+            dialogueUI.ShowDialogue(response.DialogueObject);
+        }
+        else
+        {
+            dialogueUI.CloseDialogueBox(); // Close the dialogue box if there's no follow-up dialogue.
+        }
     }
 }

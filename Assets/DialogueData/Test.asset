@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Test
   m_EditorClassIdentifier: 
   dialogue:
-  - 'This is the first dialogue:
+  - 'So, this is the first dialogue:
 
-    Helloooo? Stream Riize''s Odyssey amd stan
-    Riize!!! HUHUHUHUHHUUHUHUHUHUHUH'
+    Helloooo??  Stream Riize''s Odyssey amd
+    stan Riize!!! HUHUHUHUHHUUHUHUHUHUHU...'
   - 'This is the second dialogue:
 
-    So will you listen to it? Goodnight, thanks
-    bye!'
+    So will you listen to it?? Goodnight, thanks
+    bye!!!!'
   responses:
   - responseText: Yes
     dialogueObject: {fileID: 11400000, guid: 2b273cf466d204b44aaa2d84eb1799e4, type: 2}

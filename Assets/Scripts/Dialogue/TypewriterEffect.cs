@@ -6,13 +6,31 @@ using TMPro;
 public class TypewriterEffect : MonoBehaviour
 {
     [SerializeField] private float typewriterSpeed = 50f;  // To edit in unity for the Speed of the typewriter effect (characters per second)
-    public Coroutine Run(string textToType, TMP_Text textLabel)      // Responsible for running the couroutine of starting the typing effect.
+
+    public bool IsRunning { private set; get; }
+
+    private readonly List<Punctuation> punctuations = new List<Punctuation>()
     {
-        return StartCoroutine(TypeText(textToType, textLabel));
+        new Punctuation(new HashSet<char>() {'.', '!', '?'}, 0.6f),      // Pause duration after sentence-ending punctuation)
+        new Punctuation(new HashSet<char>() {'.', '!', '?'}, 0.3f)      // Pause duration after shorter pauses
+    };
+
+    private Coroutine typingCoroutine;
+
+    public void Run(string textToType, TMP_Text textLabel)      // Responsible for running the couroutine of starting the typing effect.
+    {
+        typingCoroutine = StartCoroutine(TypeText(textToType, textLabel));
+    }
+
+    public void OnParticleSystemStopped()
+    {
+        StopCoroutine(typingCoroutine);
+        IsRunning = false;
     }
 
     private IEnumerator TypeText(string textToType, TMP_Text textLabel)      // Coroutine for typing the text out.
     {
+        IsRunning = true;
         textLabel.text = string.Empty;  // Clear the text label at the start
      // yield return new WaitForSeconds(2);  // (THIS HAD BEEN INPUT IN THE DialogueUI SCRIPT INSTEAD) Optional delay before starting the effect
      
@@ -21,15 +39,54 @@ public class TypewriterEffect : MonoBehaviour
 
         while (charIndex < textToType.Length)
         {
+            int lastCharIndex = charIndex;  // Store the last character index to check for punctuation
+
             t += Time.deltaTime * typewriterSpeed;  // Adjust the multiplier to change typing speed (the duration of the effect)
+
             charIndex = Mathf.FloorToInt(t);  // value of characters per second (value of the timer)
             charIndex = Mathf.Clamp(charIndex, 0, textToType.Length);
 
-            textLabel.text = textToType.Substring(0, charIndex);  // Sets the text to be displayed up to the current character index
+            for(int i = lastCharIndex; i < charIndex; i++)
+            {
+                bool isLast = i >= textToType.Length - 1; // Check if it's the last character
+
+                textLabel.text = textToType.Substring(0, i + 1);  // Update the text to include the new character
+
+                if (IsPunctuation(textToType[i], out float waitTime) && !isLast && !IsPunctuation(textToType[i + 1], out _))
+                {
+                    yield return new WaitForSeconds(waitTime);  // Wait for the specified duration if it's a punctuation character
+                }
+            }
 
             yield return null;  // waits for one frame
         }
 
-        textLabel.text = textToType;  // Ensures the full text is displayed at the end of the effect
+        IsRunning = false;
+    }
+
+    private bool IsPunctuation(char character, out float waitTime)
+    {
+        foreach(Punctuation punctuationCategory in punctuations) // Loop through each punctuation category
+        {
+            if (punctuationCategory.Punctuations.Contains(character))    // Check if the character is in the current category
+            {
+                waitTime = punctuationCategory.WaitTime;   // Set the wait time based on the category
+                return true;    // Return true if it's a punctuation character
+            }
+        }
+        waitTime = default;
+        return false;
+    }
+
+    private readonly struct Punctuation
+    {
+        public readonly HashSet<char> Punctuations;
+        public readonly float WaitTime;
+
+        public Punctuation(HashSet<char> punctuations, float waitTime)
+        {
+            Punctuations = punctuations;
+            WaitTime = waitTime;
+        }
     }
 }
