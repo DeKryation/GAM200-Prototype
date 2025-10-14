@@ -7,13 +7,21 @@ Your heartbeat is your weapon in this fast-paced action-platformer. Keep moving 
 *Controls*:
 
 A / D - Move Left / Move Right
+
 Spacebar - Jump
+
 Shift - Dash
+
 Spacebar + Shift (with higher heartrate) - Long Jump
+
 J - Basic Attack
+
 K - Parry
+
 E - Interact
+
 OnMouseDown Left Click / Spacebar - Continue the Dialogue
+
 Esc - Pause Menu
 
 Collect Bananas - Restore Energy
