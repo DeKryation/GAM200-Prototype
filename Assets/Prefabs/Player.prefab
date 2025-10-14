@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7267b3548d188734db4c8d9b37309bd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogueUI: {fileID: 0}
   walkSpeed: 7
   jumpImpulse: 18
   airWalkSpeed: 5
@@ -154,7 +155,8 @@ MonoBehaviour:
   _comboActive: 0
   _comboStep: 0
   _queuedNextAttack: 0
-  comboAdvanceThreshold: 0.8
+  comboAdvanceThreshold: 0.7
+  _wasInAttack3: 0
 --- !u!114 &3450044499224201180
 MonoBehaviour:
   m_ObjectHideFlags: 0

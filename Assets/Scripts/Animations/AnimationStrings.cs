@@ -27,6 +27,7 @@ namespace Assets.Scripts
         internal static string canAttack = "canAttack";
         internal static string attackUpTrigger = "attackUp";
         internal static string attackDownTrigger = "attackDown";
+        internal static string attackComboCooldown = "attackComboCooldown";
 
     }
 }

@@ -112,6 +112,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int _comboStep = 0;
     [SerializeField] private bool _queuedNextAttack = false;
     [SerializeField] private float comboAdvanceThreshold = 0.98f;
+    [SerializeField] private bool _wasInAttack3 = false;
 
     private void Awake()
     {
@@ -178,17 +179,25 @@ public class PlayerController : MonoBehaviour
     }
     private void HandleComboEndCooldown()
     {
-        if (!_comboActive) return;
+        var st = animator.GetCurrentAnimatorStateInfo(0);
 
-        // We consider the combo "ended" when we're no longer in any attack state,
-        // and we're not mid-transition between attack states.
+        bool inAttack1 = st.IsName(State_Attack1);
+        bool inAttack2 = st.IsName(State_Attack2);
+        bool inAttack3 = st.IsName(State_Attack3);
+        bool inAnyAttack = inAttack1 || inAttack2 || inAttack3 || st.IsTag("Attack");
         bool inTransition = animator.IsInTransition(0);
-        if (!IsInAttackState() && !inTransition)
+
+        // If we were in attack_3 on the previous frame, and now we're cleanly out of all attack states,
+        // start (or refresh) the cooldown so a new combo can't begin immediately.
+        if (_wasInAttack3 && !inAnyAttack && !inTransition)
         {
-            _attackCooldownRemaining = attackCooldownSeconds; // start post-combo cooldown
+            _attackCooldownRemaining = Mathf.Max(_attackCooldownRemaining, attackCooldownSeconds);
             _comboActive = false;
             _comboStep = 0;
+            _queuedNextAttack = false;
         }
+
+        _wasInAttack3 = inAttack3;
     }
 
     private void FixedUpdate()
@@ -280,8 +289,9 @@ public class PlayerController : MonoBehaviour
             // --- CHAINING: queue next attack; we’ll hop when this clip finishes ---
             if (st.IsName(State_Attack1) || st.IsName(State_Attack2))
             {
-                _queuedNextAttack = true;   // <<-- was CrossFade; now we queue
-                return;                     // don't touch cooldown while chaining
+                _queuedNextAttack = true;
+                _comboActive = true;              // NEW
+                return;
             }
 
             // --- NEW COMBO START (your existing intent + cooldown) ---
@@ -306,6 +316,7 @@ public class PlayerController : MonoBehaviour
             else
                 animator.SetTrigger(Assets.Scripts.AnimationStrings.attackTrigger);
 
+            _comboActive = true;
             _attackCooldownRemaining = attackCooldownSeconds; // keep your current cooldown behavior
         }
     }
