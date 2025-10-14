@@ -19,4 +19,10 @@ MonoBehaviour:
     Riize!!! HUHUHUHUHHUUHUHUHUHUHUH'
   - 'This is the second dialogue:
 
-    Goodnight, thanks bye!'
+    So will you listen to it? Goodnight, thanks
+    bye!'
+  responses:
+  - responseText: Yes
+    dialogueObject: {fileID: 11400000, guid: 2b273cf466d204b44aaa2d84eb1799e4, type: 2}
+  - responseText: No
+    dialogueObject: {fileID: 11400000, guid: d0be6f3fc809a394aaa8457cac8a9e55, type: 2}

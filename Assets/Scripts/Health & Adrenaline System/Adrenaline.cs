@@ -40,6 +40,12 @@ public class Adrenaline : MonoBehaviour
 
     private void Update()
     {
+
+        // START: Prevent Adrenaline logic if dialogue is open
+        if (playerController != null && playerController.DialogueUI != null && playerController.DialogueUI.IsOpen)
+            return;
+        // END: 
+
         if (animator == null) return;
 
         isMoving = animator.GetBool(isMovingHash);

@@ -5,6 +5,15 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections), typeof(Damageable))]
 public class PlayerController : MonoBehaviour
 {
+    // START: This is to set active for the interaction for Dialogue.
+    [SerializeField] private DialogueUI dialogueUI;
+
+    public DialogueUI DialogueUI => dialogueUI;
+
+    public IInteractable Interactable { get; set; }
+    // END: 
+
+
     public float walkSpeed = 7f;
     public float jumpImpulse = 8f;
     public float airWalkSpeed = 5f;
@@ -118,6 +127,18 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        // START: To Pause the game when the dialogue box is open.
+        if (dialogueUI.IsOpen) return;
+        // END:
+
+        // START: This is to set active for the interaction for Dialogue.
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+                Interactable?.Interact(player: this);
+        }
+        // END:
+
+
         // existing cooldown ticking
         if (_attackCooldownRemaining > 0f)
         {
@@ -194,6 +215,15 @@ public class PlayerController : MonoBehaviour
     {
         if (PauseMenu.GameIsPaused) return;
 
+        // START: Prevent movement if dialogue is open
+        if (dialogueUI != null && dialogueUI.IsOpen) 
+        {
+            moveInput = Vector2.zero;
+            IsMoving = false;
+            return;
+        }
+        // END:
+
         moveInput = context.ReadValue<Vector2>();
 
         if (IsAlive)
@@ -227,6 +257,10 @@ public class PlayerController : MonoBehaviour
     {
         // TODO
         if (PauseMenu.GameIsPaused) return;
+
+        //START: Prevent jumping if dialogue is open
+        if (dialogueUI != null && dialogueUI.IsOpen) return;
+        //END:
 
         if (context.started && touchingDirections.IsGrounded && canMove)
         {
@@ -304,6 +338,10 @@ public class PlayerController : MonoBehaviour
     public void OnParry(InputAction.CallbackContext context)
     {
         if (PauseMenu.GameIsPaused) return;
+
+        // START: Prevent parrying if dialogue is open
+        if (dialogueUI != null && dialogueUI.IsOpen) return;
+        // END:
 
         if (context.started && IsAlive)
         {
