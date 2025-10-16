@@ -81,7 +81,15 @@ public class Attack : MonoBehaviour
                     ? knockback
                     : new Vector2(-knockback.x, -knockback.y);
 
-            damageable.Hit(finalDamage, deliveredKnockback);
+            // Check if the target actually took damage
+            bool gotHit = damageable.Hit(finalDamage, deliveredKnockback);
+
+            // Extend Frenzy if hit landed during frenzy
+            if (gotHit && adrenaline != null && adrenaline.IsInFrenzy)
+            {
+                float extraTime = 1.5f; // how much Frenzy time to add per successful hit
+                adrenaline.ExtendFrenzy(extraTime);
+            }
         }
     }
 }

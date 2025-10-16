@@ -157,6 +157,7 @@ MonoBehaviour:
   _queuedNextAttack: 0
   comboAdvanceThreshold: 0.7
   _wasInAttack3: 0
+  _awaitingPostComboCooldown: 0
 --- !u!114 &3450044499224201180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,6 +175,8 @@ MonoBehaviour:
   decreaseRate: 110
   increaseRate: 65
   isMoving: 0
+  frenzyBar: {fileID: 0}
+  frenzyDuration: 6
   dieOnZero: 1
   deathThreshold: 3000
   adrenalineChanged:

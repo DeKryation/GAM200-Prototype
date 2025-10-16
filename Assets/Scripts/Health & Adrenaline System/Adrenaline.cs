@@ -11,6 +11,12 @@ public class Adrenaline : MonoBehaviour
     [SerializeField] private float increaseRate = 5f; // units per second when moving 
     [SerializeField] private bool isMoving = true;
 
+    [SerializeField] private FrenzyBar frenzyBar; // assign via Inspector
+    private bool isInFrenzy = false;
+    [SerializeField]
+    private float frenzyDuration = 5f;
+    private float frenzyTimer = 0f;
+
     [Header("Death Rules")]
     [SerializeField] private bool dieOnZero = true;
     [SerializeField] private int deathThreshold = 3000;
@@ -40,6 +46,15 @@ public class Adrenaline : MonoBehaviour
 
     private void Update()
     {
+        if (isInFrenzy)
+        {
+            frenzyTimer -= Time.deltaTime;
+            if (frenzyTimer <= 0f)
+            {
+                EndFrenzy();
+            }
+            return; // skip normal adrenaline drain while frenzied
+        }
 
         // START: Prevent Adrenaline logic if dialogue is open
         if (playerController != null && playerController.DialogueUI != null && playerController.DialogueUI.IsOpen)
@@ -104,9 +119,16 @@ public class Adrenaline : MonoBehaviour
                 CurrentAdrenaline = newVal;
                 adrenalineChanged?.Invoke(CurrentAdrenaline, maxAdrenaline);
 
+                if (CurrentAdrenaline >= deathThreshold)
+                {
+                    if (!isInFrenzy)       // avoid multiple triggers
+                        TriggerFrenzy();
+                    return;
+                }
+
                 // Death rules (only check on actual integer changes)
-                if ((dieOnZero && CurrentAdrenaline <= 0) || CurrentAdrenaline >= deathThreshold)
-                    KillPlayer();
+                //if ((dieOnZero && CurrentAdrenaline <= 0) || CurrentAdrenaline >= deathThreshold)
+                    //KillPlayer();
             }
 
             // Speed & damage tiers (also only recompute when value actually changed)
@@ -132,10 +154,44 @@ public class Adrenaline : MonoBehaviour
                 }
             }
         }
-        // If wholeDelta == 0, we changed by <1 this frame — keep accumulating quietly.
+        // If wholeDelta == 0, we changed by <1 this frame keep accumulating quietly.
+    }
+    private void TriggerFrenzy()
+    {
+        isInFrenzy = true;
+        frenzyTimer = frenzyDuration;
+        frenzyBar?.ActivateFrenzy(frenzyDuration);
+
+        // Optional buff effects
+        playerController.walkSpeed *= 1.5f;
+        playerController.airWalkSpeed *= 1.5f;
+        DamageMultiplier = 3f;
+
+        Debug.Log("Frenzy activated!");
     }
 
+    private void EndFrenzy()
+    {
+        isInFrenzy = false;
+        CurrentAdrenaline = maxAdrenaline - 1; // prevent instant re-trigger
+        DamageMultiplier = 1f;
+        playerController.walkSpeed = 6f;
+        playerController.airWalkSpeed = 5f;
 
+        Debug.Log("Frenzy ended!");
+    }
+    public bool IsInFrenzy => isInFrenzy;
+
+    public void ExtendFrenzy(float extraSeconds)
+    {
+        // add to remaining time, but clamp to the configured max duration
+        frenzyTimer = Mathf.Min(frenzyTimer + extraSeconds, frenzyDuration);
+
+        // just visually update the bar without restarting it
+        frenzyBar?.UpdateRemainingFrenzy(frenzyTimer, frenzyDuration);
+
+        Debug.Log($"Frenzy extended by {extraSeconds:F1}s! Remaining: {frenzyTimer:F1}s");
+    }
 
     private void KillPlayer()
     {
