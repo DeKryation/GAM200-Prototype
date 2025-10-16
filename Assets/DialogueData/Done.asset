@@ -17,3 +17,5 @@ MonoBehaviour:
   responses:
   - responseText: Okay, bye.
     dialogueObject: {fileID: 0}
+  CharacterName: Baddie Flame Daddy
+  CharacterPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}

@@ -11,4 +11,7 @@ public class DialogueObject : ScriptableObject
     public bool HasResponses => Responses != null && Responses.Length > 0;      // Property to check if there are any responses available.
 
     public Response[] Responses => responses;
+
+    public string CharacterName;
+    public Sprite CharacterPortrait;
 }

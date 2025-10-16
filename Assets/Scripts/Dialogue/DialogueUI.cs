@@ -8,6 +8,8 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private GameObject dialogueBox;
     [SerializeField] private TMP_Text textLabel;
     // [SerializeField] private DialogueObject testDialogue;
+    [SerializeField] private UnityEngine.UI.Image characterPortrait;
+    [SerializeField] private TMP_Text characterNameLabel;
 
     public bool IsOpen { get; private set; }
 
@@ -28,6 +30,14 @@ public class DialogueUI : MonoBehaviour
     {
         IsOpen = true;
         dialogueBox.SetActive(true);
+
+        // NEW — Set the portrait and name from DialogueObject (if your DialogueObject stores them)
+        if (characterPortrait != null && dialogueObject.CharacterPortrait != null)      // Check if the characterPortrait and CharacterPortrait are not null
+            characterPortrait.sprite = dialogueObject.CharacterPortrait;        // Set the character portrait sprite
+
+        if (characterNameLabel != null)     // Check if the characterNameLabel is not null
+            characterNameLabel.text = dialogueObject.CharacterName;     // Set the character name text
+
         StartCoroutine(StepThroughDialogue(dialogueObject));
     }
 
@@ -87,5 +97,12 @@ public class DialogueUI : MonoBehaviour
         IsOpen = false;
         dialogueBox.SetActive(false);
         textLabel.text = string.Empty;  // Clear the text label when closing the dialogue box
+
+        // NEW — Reset portrait & name
+        if (characterNameLabel != null)
+            characterNameLabel.text = string.Empty;
+
+        if (characterPortrait != null)
+            characterPortrait.sprite = null;
     }
 }
