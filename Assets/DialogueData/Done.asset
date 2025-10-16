@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: Done
   m_EditorClassIdentifier: 
   dialogue:
-  - I'm done and dusted.
-  responses: []
+  - Nothing from me, I'm done and dusted.
+  responses:
+  - responseText: Okay, bye.
+    dialogueObject: {fileID: 0}

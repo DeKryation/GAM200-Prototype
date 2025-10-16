@@ -30,11 +30,18 @@ public class DialogueActivator : MonoBehaviour, IInteractable
 
     public void Interact(PlayerController player)
     {
-        if (TryGetComponent(out DialogueResponseEvents responseEvents) && responseEvents.DialogueObject == dialogueObject)
+        /* if (TryGetComponent(out DialogueResponseEvents responseEvents) && responseEvents.DialogueObject == dialogueObject)
         {
             player.DialogueUI.AddResponseEvents(responseEvents.Events);
+        } */
+        foreach (DialogueResponseEvents responseEvents in GetComponents<DialogueResponseEvents>())
+        {
+            if (responseEvents.DialogueObject == dialogueObject)
+            {
+                player.DialogueUI.AddResponseEvents(responseEvents.Events);
+                break;
+            }
         }
-
-        player.DialogueUI.ShowDialogue(dialogueObject);
+            player.DialogueUI.ShowDialogue(dialogueObject);
     }
 }
