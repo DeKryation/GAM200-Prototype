@@ -26,7 +26,7 @@ public class MainMenu : MonoBehaviour
 
     public void GoToSceneLevelOne()              //This is attached to the button in unity
     {
-        SceneManager.LoadScene("MainLDScene");  //RMB TO UPDATE (NAME) IF SCENE NAME CHANGES
+        SceneManager.LoadScene("Edris' DS Scene");  //RMB TO UPDATE (NAME) IF SCENE NAME CHANGES
     }
 
     public void QuitGame()
