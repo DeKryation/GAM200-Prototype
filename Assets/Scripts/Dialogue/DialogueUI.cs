@@ -5,6 +5,8 @@ using TMPro;
 
 public class DialogueUI : MonoBehaviour
 {
+    public static event Action OnDialogueClosed;    // Event triggered when the dialogue box is closed
+
     [SerializeField] private GameObject dialogueBox;
     [SerializeField] private TMP_Text textLabel;
     // [SerializeField] private DialogueObject testDialogue;
@@ -130,5 +132,7 @@ public class DialogueUI : MonoBehaviour
 
         if (characterPortrait != null)
             characterPortrait.sprite = null;
+
+        OnDialogueClosed?.Invoke(); // Trigger the dialogue closed event
     }
 }
