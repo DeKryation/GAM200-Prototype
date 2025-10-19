@@ -17,5 +17,9 @@ MonoBehaviour:
   responses:
   - responseText: Okay, bye.
     dialogueObject: {fileID: 0}
+  voiceSound: {fileID: 8300000, guid: 9e2d9b838c6ef9c4c88de36412cc67d3, type: 3}
+  voicePitch: 1
+  voiceSFXName: OkDialogue_NPC
+  loopVoice: 1
   CharacterName: Baddie Flame Daddy
   CharacterPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}

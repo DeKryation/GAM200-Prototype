@@ -60,14 +60,23 @@ public class DialogueUI : MonoBehaviour
         {
             string dialogue = dialogueObject.Dialogue[i];
 
-            // Play the voice clip for this line (if assigned)
+            // Start looping the voice clip for this DialogueObject
             if (audioSource != null && dialogueObject.VoiceSound != null)
             {
+                audioSource.clip = dialogueObject.VoiceSound;
                 audioSource.pitch = dialogueObject.VoicePitch;
-                audioSource.PlayOneShot(dialogueObject.VoiceSound);
+                audioSource.loop = true; // loop during the line
+                audioSource.Play();
             }
 
             yield return RunTypingEffect(dialogue); // Wait for the typing effect to complete
+
+            // Stop looping once line is done typing
+            if (audioSource != null && audioSource.isPlaying)
+            {
+                audioSource.loop = false;
+                audioSource.Stop();
+            }
 
             textLabel.text = dialogue; // Ensure the full dialogue is displayed after typing effect
 
@@ -110,6 +119,10 @@ public class DialogueUI : MonoBehaviour
         IsOpen = false;
         dialogueBox.SetActive(false);
         textLabel.text = string.Empty;  // Clear the text label when closing the dialogue box
+
+        // Stop voice playback when dialogue closes
+        if (audioSource != null && audioSource.isPlaying)
+            audioSource.Stop();
 
         // NEW — Reset portrait & name
         if (characterNameLabel != null)

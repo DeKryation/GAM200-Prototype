@@ -15,5 +15,9 @@ MonoBehaviour:
   dialogue:
   - You said no.
   responses: []
+  voiceSound: {fileID: 8300000, guid: d35e116a7f51e624680b27055e587e6b, type: 3}
+  voicePitch: 1
+  voiceSFXName: NoDialogue_NPC
+  loopVoice: 1
   CharacterName: Baddie Flame Daddy
   CharacterPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}

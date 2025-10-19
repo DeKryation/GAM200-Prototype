@@ -3,6 +3,9 @@ using UnityEngine;
 public class DialogueActivator : MonoBehaviour, IInteractable
 {
     [SerializeField] private DialogueObject dialogueObject;
+    [SerializeField] private GameObject interactIcon; // assign the icon prefab or object in Inspector
+    [SerializeField] private AudioSource sfxSource;     // AudioSource to play SFX
+    [SerializeField] private AudioClip sfxClip;     // SFX clip to play on interaction
 
     public void UpdateDialogueObject(DialogueObject dialogueObject)
     {
@@ -14,6 +17,16 @@ public class DialogueActivator : MonoBehaviour, IInteractable
         if (other.CompareTag("Player") && other.TryGetComponent(out PlayerController player))
         {
             player.Interactable = this;
+
+            // Show the icon when in range
+            if (interactIcon != null)
+                interactIcon.SetActive(true);
+
+            // --- Play SFX here ---
+            if (sfxSource != null && sfxClip != null)
+            {
+                sfxSource.PlayOneShot(sfxClip);
+            }
         }
     }
 
@@ -24,6 +37,10 @@ public class DialogueActivator : MonoBehaviour, IInteractable
             if (player.Interactable is DialogueActivator dialogueActivator && dialogueActivator && dialogueActivator == this)
             {
                 player.Interactable = null;
+
+                // Hide the icon when leaving range
+                if (interactIcon != null)
+                    interactIcon.SetActive(false);
             }
         }
     }

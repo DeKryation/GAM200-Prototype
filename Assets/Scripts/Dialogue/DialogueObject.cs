@@ -19,6 +19,10 @@ public class DialogueObject : ScriptableObject
     public AudioClip VoiceSound => voiceSound;
     public float VoicePitch => voicePitch;
 
+    [Header("Voice Settings")]
+    public string voiceSFXName;   // The name of the SFX to play (matches SoundLibrary name)
+    public bool loopVoice = true; // Whether the voice should loop during typing
+
     public string CharacterName;
     public Sprite CharacterPortrait;
 }

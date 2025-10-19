@@ -11,7 +11,9 @@ public class PlayerController : MonoBehaviour
     public DialogueUI DialogueUI => dialogueUI;
 
     public IInteractable Interactable { get; set; }
-    // END: 
+    
+    [SerializeField] private GameObject interactIcon;
+    // END:
 
 
     public float walkSpeed = 7f;
@@ -137,6 +139,13 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             Interactable?.Interact(player: this);
+        }
+        // END:
+
+        // START: Show/hide icon depending on Interactable
+        if (interactIcon != null)
+        {
+            interactIcon.SetActive(Interactable != null);
         }
         // END:
 
