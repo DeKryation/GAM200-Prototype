@@ -11,6 +11,9 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Image characterPortrait;
     [SerializeField] private TMP_Text characterNameLabel;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource; // assign on the DialogueUI GameObject (no clip needed)
+
     public bool IsOpen { get; private set; }
 
     private ResponseHandler responseHandler;
@@ -21,6 +24,9 @@ public class DialogueUI : MonoBehaviour
         // GetComponent<TypewriterEffect>().Run(textToType:"Go Stream ODYSSEY by RIIZE!\nIt's sure fire and addictive!!", textLabel);     // Start the typewriter effect with the specified text
         typewriterEffect = GetComponent<TypewriterEffect>();        // Get the TypewriterEffect component attached to the same GameObject
         responseHandler = GetComponent<ResponseHandler>();          // Get the ResponseHandler component attached to the same GameObject
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>(); // fallback
 
         CloseDialogueBox();
        // ShowDialogue(testDialogue);     // Show the test dialogue at the start
@@ -53,6 +59,13 @@ public class DialogueUI : MonoBehaviour
         for (int i = 0; i < dialogueObject.Dialogue.Length; i++)
         {
             string dialogue = dialogueObject.Dialogue[i];
+
+            // Play the voice clip for this line (if assigned)
+            if (audioSource != null && dialogueObject.VoiceSound != null)
+            {
+                audioSource.pitch = dialogueObject.VoicePitch;
+                audioSource.PlayOneShot(dialogueObject.VoiceSound);
+            }
 
             yield return RunTypingEffect(dialogue); // Wait for the typing effect to complete
 

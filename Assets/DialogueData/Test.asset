@@ -26,5 +26,7 @@ MonoBehaviour:
     dialogueObject: {fileID: 11400000, guid: 2b273cf466d204b44aaa2d84eb1799e4, type: 2}
   - responseText: No
     dialogueObject: {fileID: 11400000, guid: d0be6f3fc809a394aaa8457cac8a9e55, type: 2}
+  voiceSound: {fileID: 8300000, guid: 448d1b1ac50fd404ab79bcc138cd6d04, type: 3}
+  voicePitch: 1
   CharacterName: Baddie Flame Daddy
   CharacterPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
