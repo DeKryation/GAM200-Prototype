@@ -28,8 +28,7 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        if (!musicSource.isPlaying)
-            PlayMusic("BGM");
+        PlayMusic("BGMLevel1");
     }
 
     public void PlayMusic(string name)
