@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cb63c3cc672692408a21a266af340c6, type: 3}
+  m_Name: Testing
+  m_EditorClassIdentifier: 
+  dialogueLines:
+  - text: Wassup mah fam, have you seen my homework?
+    speakerName: Bro
+    speakerPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    isLeftSide: 1
+  - text: Nahhh, sorry buddy... but all the best to you!!
+    speakerName: Baddie Flame Daddy
+    speakerPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    otherPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    isLeftSide: 0
+  - text: Alright, but thanks fam!!
+    speakerName: Bro
+    speakerPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    isLeftSide: 1
+  responses: []
+  voiceSound: {fileID: 8300000, guid: 448d1b1ac50fd404ab79bcc138cd6d04, type: 3}
+  voicePitch: 1

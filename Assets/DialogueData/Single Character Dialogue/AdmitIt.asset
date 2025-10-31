@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cb63c3cc672692408a21a266af340c6, type: 3}
+  m_Name: AdmitIt
+  m_EditorClassIdentifier: 
+  dialogue:
+  - You nodded your head and agreed by saying HELL YEAH.
+  responses: []
+  voiceSound: {fileID: 8300000, guid: a2eef35295312cf43b24d4dba1e2d482, type: 3}
+  voicePitch: 1
+  voiceSFXName: YesDialogue_NPC
+  loopVoice: 1
+  CharacterName: Alex, Clown Lion
+  CharacterPortrait: {fileID: 21300000, guid: 7734f16995421b24ab6104d2e2464cb4, type: 3}

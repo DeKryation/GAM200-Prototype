@@ -5,16 +5,22 @@ using TMPro;
 
 public class DialogueUI : MonoBehaviour
 {
-    public static event Action OnDialogueClosed;    // Event triggered when the dialogue box is closed
+    public static event Action OnDialogueClosed;
 
+    [Header("UI Elements")]
     [SerializeField] private GameObject dialogueBox;
     [SerializeField] private TMP_Text textLabel;
-    // [SerializeField] private DialogueObject testDialogue;
-    [SerializeField] private UnityEngine.UI.Image characterPortrait;
-    [SerializeField] private TMP_Text characterNameLabel;
+
+    [Header("Portraits")]
+    [SerializeField] private UnityEngine.UI.Image leftPortrait;
+    [SerializeField] private UnityEngine.UI.Image rightPortrait;
+    [SerializeField] private TMP_Text leftCharacterNameLabel;
+    [SerializeField] private TMP_Text rightCharacterNameLabel;
+    [SerializeField] private float inactiveAlpha = 0.5f;
+    [SerializeField] private float activeAlpha = 1f;
 
     [Header("Audio")]
-    [SerializeField] private AudioSource audioSource; // assign on the DialogueUI GameObject (no clip needed)
+    [SerializeField] private AudioSource audioSource;
 
     public bool IsOpen { get; private set; }
 
@@ -23,116 +29,133 @@ public class DialogueUI : MonoBehaviour
 
     private void Start()
     {
-        // GetComponent<TypewriterEffect>().Run(textToType:"Go Stream ODYSSEY by RIIZE!\nIt's sure fire and addictive!!", textLabel);     // Start the typewriter effect with the specified text
-        typewriterEffect = GetComponent<TypewriterEffect>();        // Get the TypewriterEffect component attached to the same GameObject
-        responseHandler = GetComponent<ResponseHandler>();          // Get the ResponseHandler component attached to the same GameObject
+        typewriterEffect = GetComponent<TypewriterEffect>();
+        responseHandler = GetComponent<ResponseHandler>();
 
         if (audioSource == null)
-            audioSource = GetComponent<AudioSource>(); // fallback
+            audioSource = GetComponent<AudioSource>();
+
+        // Start with portraits invisible
+        SetPortraitAlpha(leftPortrait, 0f);
+        SetPortraitAlpha(rightPortrait, 0f);
 
         CloseDialogueBox();
-       // ShowDialogue(testDialogue);     // Show the test dialogue at the start
     }
 
-    public void ShowDialogue(DialogueObject dialogueObject)
+    public void ShowDialogue(DialogueObject dialogueObject)     // Main method to start showing dialogue
     {
         IsOpen = true;
         dialogueBox.SetActive(true);
 
-        // NEW — Set the portrait and name from DialogueObject (if your DialogueObject stores them)
-        if (characterPortrait != null && dialogueObject.CharacterPortrait != null)      // Check if the characterPortrait and CharacterPortrait are not null
-            characterPortrait.sprite = dialogueObject.CharacterPortrait;        // Set the character portrait sprite
-
-        if (characterNameLabel != null)     // Check if the characterNameLabel is not null
-            characterNameLabel.text = dialogueObject.CharacterName;     // Set the character name text
-
         StartCoroutine(StepThroughDialogue(dialogueObject));
     }
 
-    public void AddResponseEvents(ResponseEvent[] responseEvents)   // Method to add response events to the response handler
+    public void AddResponseEvents(ResponseEvent[] responseEvents)       // Method to add response events to the response handler
     {
         responseHandler.AddResponseEvents(responseEvents);
     }
 
-    private IEnumerator StepThroughDialogue(DialogueObject dialogueObject)
+    private IEnumerator StepThroughDialogue(DialogueObject dialogueObject)      // Coroutine to step through each line of dialogue
     {
-        // yield return new WaitForSeconds(2);  // Optional delay before starting the effect
-
-        for (int i = 0; i < dialogueObject.Dialogue.Length; i++)
+        for (int i = 0; i < dialogueObject.DialogueLines.Length; i++)
         {
-            string dialogue = dialogueObject.Dialogue[i];
+            var line = dialogueObject.DialogueLines[i];
 
-            // Start looping the voice clip for this DialogueObject
-            if (audioSource != null && dialogueObject.VoiceSound != null)
+            // Assign both portraits immediately
+            if (leftPortrait != null)
             {
-                audioSource.clip = dialogueObject.VoiceSound;
-                audioSource.pitch = dialogueObject.VoicePitch;
-                audioSource.loop = true; // loop during the line
-                audioSource.Play();
+                leftPortrait.gameObject.SetActive(true);
+                leftPortrait.sprite = line.isLeftSide ? line.speakerPortrait : line.otherPortrait;
+                leftPortrait.color = new Color(1f, 1f, 1f, line.isLeftSide ? activeAlpha : inactiveAlpha);
             }
 
-            yield return RunTypingEffect(dialogue); // Wait for the typing effect to complete
-
-            // Stop looping once line is done typing
-            if (audioSource != null && audioSource.isPlaying)
+            if (rightPortrait != null)
             {
-                audioSource.loop = false;
-                audioSource.Stop();
+                rightPortrait.gameObject.SetActive(true);
+                rightPortrait.sprite = line.isLeftSide ? line.otherPortrait : line.speakerPortrait;
+                rightPortrait.color = new Color(1f, 1f, 1f, line.isLeftSide ? inactiveAlpha : activeAlpha);
             }
 
-            textLabel.text = dialogue; // Ensure the full dialogue is displayed after typing effect
+            // Update character names
+            if (leftCharacterNameLabel != null)
+                leftCharacterNameLabel.text = line.isLeftSide ? line.speakerName : "";
+            if (rightCharacterNameLabel != null)
+                rightCharacterNameLabel.text = !line.isLeftSide ? line.speakerName : "";
 
-            if (i == dialogueObject.Dialogue.Length - 1 && dialogueObject.Responses != null && dialogueObject.HasResponses) break; // If it's the last line and there are responses, break to show responses
+            // Start typing dialogue
+            yield return RunTypingEffect(line.text);
+            textLabel.text = line.text;
 
-            yield return null; // Wait one frame before checking for input
+            // Wait for player input to continue
             yield return new WaitUntil(() =>
-            Input.GetKeyDown(KeyCode.Space) ||  // Wait until the player presses the 'Space' key to continue
-            Input.GetMouseButtonDown(0) // or player presses the left mouse button to continue
+                Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)
             );
         }
 
+        // Show responses or close dialogue
         if (dialogueObject.HasResponses)
-        {
-            responseHandler.ShowResponses(dialogueObject.Responses);    // Show responses if available
-        }
+            responseHandler.ShowResponses(dialogueObject.Responses);
         else
-        {
-            CloseDialogueBox();     // Close the dialogue box if there are no responses
-        }
+            CloseDialogueBox();
     }
 
-    private IEnumerator RunTypingEffect(string dialogue)
+    private IEnumerator RunTypingEffect(string dialogue)        // Coroutine to run the typewriter effect
     {
         typewriterEffect.Run(dialogue, textLabel);
 
         while (typewriterEffect.IsRunning)
         {
-            yield return null; // Wait until the typing effect is complete
+            yield return null;
 
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) // Allow skipping the typing effect
-            {
-                typewriterEffect.OnParticleSystemStopped(); // Stop the typing effect
-            }
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+                typewriterEffect.OnParticleSystemStopped();
         }
     }
 
-    public void CloseDialogueBox()
+    private void SetPortraitAlpha(UnityEngine.UI.Image portrait, float alpha)       // Helper method to set portrait alpha
+    {
+        if (portrait == null) return;
+        var c = portrait.color;
+        c.a = alpha;
+        portrait.color = c;
+    }
+
+    public void CloseDialogueBox()      // Method to close the dialogue box and reset UI elements
     {
         IsOpen = false;
         dialogueBox.SetActive(false);
-        textLabel.text = string.Empty;  // Clear the text label when closing the dialogue box
+        textLabel.text = string.Empty;
 
-        // Stop voice playback when dialogue closes
         if (audioSource != null && audioSource.isPlaying)
             audioSource.Stop();
 
-        // NEW — Reset portrait & name
-        if (characterNameLabel != null)
-            characterNameLabel.text = string.Empty;
+        // Reset portraits
+        if (leftPortrait != null)
+        {
+            leftPortrait.sprite = null;
+            leftPortrait.gameObject.SetActive(false);
+        }
+        if (rightPortrait != null)
+        {
+            rightPortrait.sprite = null;
+            rightPortrait.gameObject.SetActive(false);
+        }
 
-        if (characterPortrait != null)
-            characterPortrait.sprite = null;
+        // Reset names
+        if (leftCharacterNameLabel != null)
+            leftCharacterNameLabel.text = string.Empty;
+        if (rightCharacterNameLabel != null)
+            rightCharacterNameLabel.text = string.Empty;
 
-        OnDialogueClosed?.Invoke(); // Trigger the dialogue closed event
+        // Reset alpha
+        SetPortraitAlpha(leftPortrait, 0f);
+        SetPortraitAlpha(rightPortrait, 0f);
+
+        OnDialogueClosed?.Invoke();
     }
 }
+
+
+
+
+

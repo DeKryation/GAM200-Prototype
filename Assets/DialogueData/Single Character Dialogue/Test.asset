@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cb63c3cc672692408a21a266af340c6, type: 3}
+  m_Name: Test
+  m_EditorClassIdentifier: 
+  dialogue:
+  - 'So, this is the first dialogue:
+
+    Helloooo??  Stream Riize''s Odyssey amd
+    stan Riize!!! HUHUHUHUHHUUHUHUHUHUHU...'
+  - 'This is the second dialogue:
+
+    So will you listen to it?? Goodnight, thanks
+    bye!!!!'
+  responses:
+  - responseText: Yes
+    dialogueObject: {fileID: 11400000, guid: 2b273cf466d204b44aaa2d84eb1799e4, type: 2}
+  - responseText: No
+    dialogueObject: {fileID: 11400000, guid: d0be6f3fc809a394aaa8457cac8a9e55, type: 2}
+  voiceSound: {fileID: 8300000, guid: 448d1b1ac50fd404ab79bcc138cd6d04, type: 3}
+  voicePitch: 1
+  voiceSFXName: DefaultDialogueVoice_NPC
+  loopVoice: 1
+  CharacterName: Baddie Flame Daddy
+  CharacterPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
