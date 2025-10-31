@@ -11,10 +11,9 @@ public class PlayerController : MonoBehaviour
     public DialogueUI DialogueUI => dialogueUI;
 
     public IInteractable Interactable { get; set; }
-    
+
     [SerializeField] private GameObject interactIcon;
     // END:
-
 
     public float walkSpeed = 7f;
     public float jumpImpulse = 8f;
@@ -113,9 +112,27 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _comboActive = false;
     [SerializeField] private int _comboStep = 0;
     [SerializeField] private bool _queuedNextAttack = false;
-    [SerializeField] private float comboAdvanceThreshold = 0.98f;
+
+    // LOWERED so Adv 2->3 happens reliably before exit transitions win
+    [SerializeField] private float comboAdvanceThreshold = 0.6f; // was 0.98f
+
     [SerializeField] private bool _wasInAttack3 = false;
     [SerializeField] private bool _awaitingPostComboCooldown = false;
+
+    // --- Attack 3 lunge: executes ONLY AFTER A3 is entered (no Damageable!) ---
+    [Header("Attack 3 Lunge")]
+    [SerializeField] private float attack3LungeSpeed = 10f;   // shove speed
+    [SerializeField] private float attack3LungeTime = 0.12f; // seconds to hold momentum
+    [SerializeField] private float attack3LungeDelay = 0.02f; // tiny delay after A3 entry
+
+    private bool _attack3Entered = false;
+    private bool _attack3LungeDone = false;
+    private bool _attack3LungeActive = false;
+    private float _attack3LungeEnd = 0f;
+    private Coroutine _a3LungeCo;
+
+    // Local movement suppression so FixedUpdate won't overwrite the shove
+    private bool _suppressMoveForLunge = false;
 
     private void Awake()
     {
@@ -124,11 +141,13 @@ public class PlayerController : MonoBehaviour
         touchingDirections = GetComponent<TouchingDirections>();
         damageable = GetComponent<Damageable>();
     }
+
     private bool IsInAttackState()
     {
         var info = animator.GetCurrentAnimatorStateInfo(0);
         return info.IsName(State_Attack1) || info.IsName(State_Attack2) || info.IsName(State_Attack3) || info.IsTag("Attack");
     }
+
     private void Update()
     {
         // START: To Pause the game when the dialogue box is open.
@@ -149,7 +168,6 @@ public class PlayerController : MonoBehaviour
         }
         // END:
 
-
         // existing cooldown ticking
         if (_attackCooldownRemaining > 0f)
         {
@@ -163,13 +181,17 @@ public class PlayerController : MonoBehaviour
         HandleComboEndCooldown();
         TryAdvanceQueuedCombo();
         ApplyPostComboCooldownIfFinished();
+
+        // Drive: enter Attack 3 first, THEN lunge
+        DriveAttack3EnterAndLunge();
     }
+
     private void TryAdvanceQueuedCombo()
     {
         if (!_queuedNextAttack) return;
 
         var st = animator.GetCurrentAnimatorStateInfo(0);
-        // wait until the clip is basically done and not mid-blend
+        // allow advancing once we're past threshold and not mid-blend
         if (st.normalizedTime < comboAdvanceThreshold || animator.IsInTransition(0)) return;
 
         if (st.IsName(State_Attack1))
@@ -182,6 +204,11 @@ public class PlayerController : MonoBehaviour
             animator.CrossFadeInFixedTime(State_Attack3, 0.05f, 0);
             _queuedNextAttack = false;
             _awaitingPostComboCooldown = true;   // <<< arm post-combo lock
+
+            // Prep A3 enter + lunge window
+            _attack3Entered = false;
+            _attack3LungeDone = false;
+            if (_a3LungeCo != null) { StopCoroutine(_a3LungeCo); _a3LungeCo = null; }
         }
         else
         {
@@ -189,6 +216,7 @@ public class PlayerController : MonoBehaviour
             _queuedNextAttack = false;
         }
     }
+
     private void ApplyPostComboCooldownIfFinished()
     {
         if (!_awaitingPostComboCooldown) return;
@@ -203,6 +231,9 @@ public class PlayerController : MonoBehaviour
             _comboActive = false;
             _comboStep = 0;
             _queuedNextAttack = false;
+
+            // safety reset for A3 lunge
+            CleanupA3LungeState();
             return;
         }
 
@@ -215,8 +246,12 @@ public class PlayerController : MonoBehaviour
             _comboActive = false;
             _comboStep = 0;
             _queuedNextAttack = false;
+
+            // safety reset for A3 lunge
+            CleanupA3LungeState();
         }
     }
+
     private void HandleComboEndCooldown()
     {
         var st = animator.GetCurrentAnimatorStateInfo(0);
@@ -235,21 +270,87 @@ public class PlayerController : MonoBehaviour
             _comboActive = false;
             _comboStep = 0;
             _queuedNextAttack = false;
+
+            // safety reset for A3 lunge
+            CleanupA3LungeState();
         }
 
         _wasInAttack3 = inAttack3;
     }
 
+    // === Attack 3: ensure entry, THEN lunge (no Damageable) ===
+    private void DriveAttack3EnterAndLunge()
+    {
+        var st = animator.GetCurrentAnimatorStateInfo(0);
+        bool inA3 = st.IsName(State_Attack3);
+        bool stable = inA3 && !animator.IsInTransition(0);
+
+        // First stable frame of Attack 3
+        if (stable && !_attack3Entered)
+        {
+            _attack3Entered = true;
+
+            // start a tiny delayed, physics-aligned shove
+            if (_a3LungeCo != null) StopCoroutine(_a3LungeCo);
+            _a3LungeCo = StartCoroutine(A3_LungeAfterEnter());
+        }
+
+        // Release suppression by time if still in A3
+        if (_attack3LungeActive && Time.time >= _attack3LungeEnd)
+        {
+            _suppressMoveForLunge = false;
+            _attack3LungeActive = false;
+        }
+
+        // If we left Attack 3 entirely, cleanup
+        if (!inA3 && (_attack3Entered || _attack3LungeActive))
+        {
+            CleanupA3LungeState();
+        }
+    }
+
+    private System.Collections.IEnumerator A3_LungeAfterEnter()
+    {
+        // ensure Animator fully entered the state, then align to physics
+        yield return null;                     // 1 render frame
+        yield return new WaitForFixedUpdate(); // next physics tick
+        if (attack3LungeDelay > 0f) yield return new WaitForSeconds(attack3LungeDelay);
+
+        if (_attack3LungeDone) yield break;    // safety double-guard
+
+        float dir = IsFacingRight ? 1f : -1f;
+
+        // push; do NOT toggle isMoving or touch Damageable
+        rb.linearVelocity = new Vector2(dir * attack3LungeSpeed, rb.linearVelocity.y);
+
+        // Locally suppress controller movement so FixedUpdate won't overwrite the shove
+        _suppressMoveForLunge = true;
+        _attack3LungeActive = true;
+        _attack3LungeEnd = Time.time + attack3LungeTime;
+        _attack3LungeDone = true;
+        // Debug.Log($"[A3 Lunge] dir={dir} speed={attack3LungeSpeed}");
+    }
+
+    private void CleanupA3LungeState()
+    {
+        _suppressMoveForLunge = false;
+        _attack3Entered = false;
+        _attack3LungeDone = false;
+        _attack3LungeActive = false;
+        if (_a3LungeCo != null) { StopCoroutine(_a3LungeCo); _a3LungeCo = null; }
+    }
+    // === end NEW ===
+
     private void FixedUpdate()
     {
-        if (!damageable.LockVelocity)
+        // Respect local lunge suppression so our shove isn't overwritten
+        if (!damageable.LockVelocity && !_suppressMoveForLunge)
         {
             if (isDashing)
             {
                 if (Time.time >= dashEndTime)
                     isDashing = false;
                 // do not touch rb.linearVelocity at all keeps momentum
-
             }
             else
             {
@@ -368,7 +469,6 @@ public class PlayerController : MonoBehaviour
             _attackCooldownRemaining = attackCooldownSeconds; // keep your existing startcooldown
         }
     }
-
 
     public void OnDash(InputAction.CallbackContext context)
     {
