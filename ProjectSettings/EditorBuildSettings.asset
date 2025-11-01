@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Edris' Scene.unity
     guid: bcc1d26a8f133124480c25de65022286
   - enabled: 1
+    path: Assets/Scenes/Edris' DS Scene.unity
+    guid: 70b7cbe41bb3a8e44ac784b5624b09d8
+  - enabled: 1
     path: Assets/Scenes/MainLDScene.unity
     guid: 3b392d72e4979af49bde7263f5092e44
   m_configObjects:
