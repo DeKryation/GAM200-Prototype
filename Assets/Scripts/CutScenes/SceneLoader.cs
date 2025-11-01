@@ -65,7 +65,7 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
-     // Method to be called when player makes a choice in the cutscene
+    // Method to be called when player makes a choice in the cutscene
 
     // Called when player selects “Yes”
     public void OnYesSelected(string nextSceneName)
@@ -76,6 +76,12 @@ public class SceneLoader : MonoBehaviour
     // Called when player selects “No” (e.g. failed the level returns back to the main menu)
     public void OnNoSelected()
     {
-        LoadScene("Edris' Scene"); // Make sure this matches your main menu scene name
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.musicSource.Stop(); // stop level music
+            Destroy(SoundManager.Instance.gameObject); // destroy the level SoundManager
+        }
+
+        LoadScene("Edris' Scene"); // Main menu scene name
     }
 }

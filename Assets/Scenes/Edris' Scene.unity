@@ -706,9 +706,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c08f871ecf80ba14fb29bec20165d3e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioMixer: {fileID: 0}
-  musicSlider: {fileID: 0}
-  sfxSlider: {fileID: 0}
+  audioMixer: {fileID: 24100000, guid: 32de150b9f89e794698b2730d8a9e11f, type: 2}
+  musicSlider: {fileID: 2052111199}
+  sfxSlider: {fileID: 677445834}
 --- !u!4 &610838144
 Transform:
   m_ObjectHideFlags: 0
@@ -946,7 +946,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a4f04f8c1d68dd40b950c239205098c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicSounds: []
+  musicSounds:
+  - name: Edris' Scene
+    clip: {fileID: 8300000, guid: b08bea0f070a0d842a5b0e1d5ffc0ca5, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 1
   sfxSounds: []
   musicSource: {fileID: 721725821}
   sfxSource: {fileID: 1215633272}
@@ -960,8 +965,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 8200330517489339500, guid: 32de150b9f89e794698b2730d8a9e11f, type: 2}
-  m_audioClip: {fileID: 8300000, guid: b08bea0f070a0d842a5b0e1d5ffc0ca5, type: 3}
-  m_Resource: {fileID: 8300000, guid: b08bea0f070a0d842a5b0e1d5ffc0ca5, type: 3}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
