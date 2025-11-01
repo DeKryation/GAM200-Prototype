@@ -5,33 +5,34 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Damageable))]
 public class Adrenaline : MonoBehaviour
 {
+    [Header("Adrenaline Settings")]
     [SerializeField] private int maxAdrenaline = 3000;
     [SerializeField] private int startAdrenaline = 75;
     [SerializeField] private float decreaseRate = 5f; // units per second when idle
     [SerializeField] private float increaseRate = 5f; // units per second when moving 
     [SerializeField] private bool isMoving = true;
 
+    [Header("Frenzy Settings")]
     [SerializeField] private FrenzyBar frenzyBar; // assign via Inspector
+    [SerializeField] private float frenzyDuration = 5f;
+
     private bool isInFrenzy = false;
-    [SerializeField]
-    private float frenzyDuration = 5f;
     private float frenzyTimer = 0f;
 
     [Header("Death Rules")]
     [SerializeField] private bool dieOnZero = true;
     [SerializeField] private int deathThreshold = 3000;
+
     public float DamageMultiplier { get; private set; } = 1f;
 
-    private PlayerController playerController; //SPEED MODIFICATIOn
-    public int CurrentAdrenaline { get; private set; }
-    public int MaxAdrenaline => maxAdrenaline;
-
-    public UnityEvent<int, int> adrenalineChanged;
-
+    private PlayerController playerController;
     private Animator animator;
     private int isMovingHash;
-
     private Damageable damageable;
+
+    public int CurrentAdrenaline { get; private set; }
+    public int MaxAdrenaline => maxAdrenaline;
+    public UnityEvent<int, int> adrenalineChanged;
 
     private float _fractionCarry = 0f;
 
@@ -40,12 +41,13 @@ public class Adrenaline : MonoBehaviour
         CurrentAdrenaline = startAdrenaline;
         animator = GetComponent<Animator>();
         isMovingHash = Animator.StringToHash(AnimationStrings.isMoving);
-        playerController = GetComponent<PlayerController>(); //SPEEDMODIF
+        playerController = GetComponent<PlayerController>();
         damageable = GetComponent<Damageable>();
     }
 
     private void Update()
     {
+        //Frenzy logic first
         if (isInFrenzy)
         {
             frenzyTimer -= Time.deltaTime;
@@ -53,13 +55,12 @@ public class Adrenaline : MonoBehaviour
             {
                 EndFrenzy();
             }
-            return; // skip normal adrenaline drain while frenzied
+            return; // skip normal adrenaline logic while frenzied
         }
 
-        // START: Prevent Adrenaline logic if dialogue is open
+        //Skip updates while dialogue is open
         if (playerController != null && playerController.DialogueUI != null && playerController.DialogueUI.IsOpen)
             return;
-        // END: 
 
         if (animator == null) return;
 
@@ -71,7 +72,7 @@ public class Adrenaline : MonoBehaviour
             DecreaseOverTime();
     }
 
-    // --- Public API to replace HP ---
+    // Public API
     public int TakeDamage(int amount)
     {
         if (amount <= 0) return 0;
@@ -88,81 +89,72 @@ public class Adrenaline : MonoBehaviour
         return Mathf.Max(0, CurrentAdrenaline - before);
     }
 
-    public void AddAdrenaline(int amount)
-    {
-        ModifyAdrenaline(amount);
-    }
+    public void AddAdrenaline(int amount) => ModifyAdrenaline(amount);
 
-    private void IncreaseOverTime()
-    {
-        ModifyAdrenaline(increaseRate * Time.deltaTime);
-    }
-
-    private void DecreaseOverTime()
-    {
-        ModifyAdrenaline(-decreaseRate * Time.deltaTime);
-    }
+    private void IncreaseOverTime() => ModifyAdrenaline(increaseRate * Time.deltaTime);
+    private void DecreaseOverTime() => ModifyAdrenaline(-decreaseRate * Time.deltaTime);
 
     private void ModifyAdrenaline(float amount)
     {
         _fractionCarry += amount;
+        int wholeDelta = (int)_fractionCarry;
+        if (wholeDelta == 0) return; // accumulate small fractions
 
-        // Convert ONLY the whole-number portion into an int delta, keep the fraction for later
-        int wholeDelta = (int)_fractionCarry; // truncates toward 0 (works for pos & neg)
-        if (wholeDelta != 0)
+        _fractionCarry -= wholeDelta;
+
+        int newVal = Mathf.Clamp(CurrentAdrenaline + wholeDelta, 0, maxAdrenaline);
+        if (newVal == CurrentAdrenaline) return;
+
+        CurrentAdrenaline = newVal;
+        adrenalineChanged?.Invoke(CurrentAdrenaline, maxAdrenaline);
+
+        // Frenzy trigger 
+        if (CurrentAdrenaline >= deathThreshold)
         {
-            _fractionCarry -= wholeDelta;
+            if (!isInFrenzy)
+                TriggerFrenzy();
+            return;
+        }
 
-            int newVal = Mathf.Clamp(CurrentAdrenaline + wholeDelta, 0, maxAdrenaline);
-            if (newVal != CurrentAdrenaline)
+        // Optional death at 0 adrenaline 
+        if (dieOnZero && CurrentAdrenaline <= 0)
+        {
+            KillPlayer();
+            return;
+        }
+
+        //Adjust speed & damage tiers 
+        if (playerController != null)
+        {
+            if (CurrentAdrenaline > 2000)
             {
-                CurrentAdrenaline = newVal;
-                adrenalineChanged?.Invoke(CurrentAdrenaline, maxAdrenaline);
-
-                if (CurrentAdrenaline >= deathThreshold)
-                {
-                    if (!isInFrenzy)       // avoid multiple triggers
-                        TriggerFrenzy();
-                    return;
-                }
-
-                // Death rules (only check on actual integer changes)
-                //if ((dieOnZero && CurrentAdrenaline <= 0) || CurrentAdrenaline >= deathThreshold)
-                    //KillPlayer();
+                playerController.walkSpeed = 8f;
+                playerController.airWalkSpeed = 6f;
+                DamageMultiplier = 2f;   // double damage
             }
-
-            // Speed & damage tiers (also only recompute when value actually changed)
-            if (playerController != null)
+            else if (CurrentAdrenaline <= 1000)
             {
-                if (CurrentAdrenaline > 2000)
-                {
-                    playerController.walkSpeed = 8f;
-                    playerController.airWalkSpeed = 6f;
-                    DamageMultiplier = 2f;   // double damage
-                }
-                else if (CurrentAdrenaline <= 1000)
-                {
-                    playerController.walkSpeed = 4f;
-                    playerController.airWalkSpeed = 4f;
-                    DamageMultiplier = 0.5f; // half damage
-                }
-                else
-                {
-                    playerController.walkSpeed = 6f;
-                    playerController.airWalkSpeed = 5f;
-                    DamageMultiplier = 1f;   // normal damage
-                }
+                playerController.walkSpeed = 4f;
+                playerController.airWalkSpeed = 4f;
+                DamageMultiplier = 0.5f; // half damage
+            }
+            else
+            {
+                playerController.walkSpeed = 6f;
+                playerController.airWalkSpeed = 5f;
+                DamageMultiplier = 1f;   // normal damage
             }
         }
-        // If wholeDelta == 0, we changed by <1 this frame keep accumulating quietly.
     }
+
+    // Frenzy 
     private void TriggerFrenzy()
     {
         isInFrenzy = true;
         frenzyTimer = frenzyDuration;
         frenzyBar?.ActivateFrenzy(frenzyDuration);
 
-        // Optional buff effects
+        // Buff effects
         playerController.walkSpeed *= 1.5f;
         playerController.airWalkSpeed *= 1.5f;
         DamageMultiplier = 3f;
@@ -173,36 +165,40 @@ public class Adrenaline : MonoBehaviour
     private void EndFrenzy()
     {
         isInFrenzy = false;
-        CurrentAdrenaline = maxAdrenaline - 1; // prevent instant re-trigger
         DamageMultiplier = 1f;
         playerController.walkSpeed = 6f;
         playerController.airWalkSpeed = 5f;
 
         Debug.Log("Frenzy ended!");
+
+        //  Kill player when Frenzy timer ends
+        if (damageable != null && damageable.IsAlive)
+        {
+            Debug.Log("Frenzy depleted — player dies!");
+            damageable.Health = 0; // triggers normal death animation + events
+        }
     }
+
+    // Frenzy helpers
     public bool IsInFrenzy => isInFrenzy;
 
     public void ExtendFrenzy(float extraSeconds)
     {
-        // add to remaining time, but clamp to the configured max duration
         frenzyTimer = Mathf.Min(frenzyTimer + extraSeconds, frenzyDuration);
-
-        // just visually update the bar without restarting it
         frenzyBar?.UpdateRemainingFrenzy(frenzyTimer, frenzyDuration);
-
         Debug.Log($"Frenzy extended by {extraSeconds:F1}s! Remaining: {frenzyTimer:F1}s");
     }
 
+    // Death handling 
     private void KillPlayer()
     {
         if (damageable != null && damageable.IsAlive)
         {
-            // Trigger existing death pipeline (animations, events, etc.)
             damageable.Health = 0;
+            Debug.Log("Player died (Adrenaline depleted)");
         }
     }
-    public void GainAdrenalineOnAttack()
-    {
-        AddAdrenaline(50);                 //ADJUST ADRENALINE ON ATTACK HERE
-    }
+
+    // Attack bonus
+    public void GainAdrenalineOnAttack() => AddAdrenaline(50);
 }
