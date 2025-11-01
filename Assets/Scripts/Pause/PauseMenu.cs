@@ -66,6 +66,14 @@ public class PauseMenu : MonoBehaviour
     {
         Resume();
         Time.timeScale = 1f;
+        
+        // Stop and destroy level SoundManager
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.musicSource.Stop();
+            Destroy(SoundManager.Instance.gameObject);
+        }
+
         SceneManager.LoadScene("Edris' Scene");
     }
 
