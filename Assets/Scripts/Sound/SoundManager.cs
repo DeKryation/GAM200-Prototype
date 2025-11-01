@@ -12,6 +12,9 @@ public class SoundManager : MonoBehaviour
     public SoundLibrary[] musicSounds, sfxSounds;
     public AudioSource musicSource, sfxSource;
     public static float musicVolume = 1f, sfxVolume = 1f;
+    [SerializeField] private int sfxSourceCount = 5;
+    private List<AudioSource> sfxSourcePool;
+    private int currentSFXIndex = 0;
 
     private void Awake()
     {
@@ -23,6 +26,13 @@ public class SoundManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+        sfxSourcePool = new List<AudioSource>();
+        for (int i = 0; i < sfxSourceCount; i++)
+        {
+            AudioSource src = gameObject.AddComponent<AudioSource>();
+            src.playOnAwake = false;
+            sfxSourcePool.Add(src);
         }
     }
 
@@ -50,19 +60,19 @@ public class SoundManager : MonoBehaviour
     public void PlaySFX(string name)
     {
         SoundLibrary s = Array.Find(sfxSounds, x => x.name == name);
-
         if (s == null)
         {
-            Debug.Log("Sound Not Found");
+            Debug.Log($"SFX '{name}' not found!");
+            return;
         }
-        else
-        {
-            sfxSource.volume = sfxVolume * s.volume;
-            sfxSource.pitch = s.pitch;
-            sfxSource.loop = s.loop;
-            sfxSource.clip = s.clip;
-            sfxSource.Play();
-        }
+
+        AudioSource src = sfxSourcePool[currentSFXIndex];
+        src.volume = sfxVolume * s.volume;
+        src.pitch = s.pitch;
+        src.loop = false;
+        src.PlayOneShot(s.clip);
+
+        currentSFXIndex = (currentSFXIndex + 1) % sfxSourcePool.Count;
     }
 
     public void ToggleMusic()
