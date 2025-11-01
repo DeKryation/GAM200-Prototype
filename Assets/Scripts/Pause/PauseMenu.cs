@@ -81,7 +81,16 @@ public class PauseMenu : MonoBehaviour
     {
         Resume();
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        // Stop current music
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.musicSource.Stop();
+            // Optional: reset clip to restart
+            SoundManager.Instance.PlayMusic("BGMLevel1"); // Replace with level music name if CHANGED.
+        }
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);     // Reload the current active scene
     }
 }
 
