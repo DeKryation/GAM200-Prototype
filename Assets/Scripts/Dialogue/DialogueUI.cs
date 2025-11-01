@@ -24,8 +24,9 @@ public class DialogueUI : MonoBehaviour
 
     public bool IsOpen { get; private set; }
 
-    private ResponseHandler responseHandler;
-    private TypewriterEffect typewriterEffect;
+    private ResponseHandler responseHandler;        // Reference to the ResponseHandler component
+    private TypewriterEffect typewriterEffect;      // Reference to the TypewriterEffect component
+    private DialogueObject currentDialogueObject;       // To hold the current dialogue object for audio reference
 
     private void Start()
     {
@@ -44,6 +45,8 @@ public class DialogueUI : MonoBehaviour
 
     public void ShowDialogue(DialogueObject dialogueObject)     // Main method to start showing dialogue
     {
+        currentDialogueObject = dialogueObject;     // Store the current dialogue object
+        
         IsOpen = true;
         dialogueBox.SetActive(true);
 
@@ -102,6 +105,7 @@ public class DialogueUI : MonoBehaviour
     private IEnumerator RunTypingEffect(string dialogue)        // Coroutine to run the typewriter effect
     {
         typewriterEffect.Run(dialogue, textLabel);
+
 
         while (typewriterEffect.IsRunning)
         {

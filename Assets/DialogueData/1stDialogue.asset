@@ -10,24 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cb63c3cc672692408a21a266af340c6, type: 3}
-  m_Name: Testing
+  m_Name: 1stDialogue
   m_EditorClassIdentifier: 
   dialogueLines:
-  - text: Wassup mah fam, have you seen my homework?
+  - text: Hey there, by any chance you have seen any monkeys around?
     speakerName: Bro
     speakerPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
     otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
     isLeftSide: 1
-  - text: Nahhh, sorry buddy... but all the best to you!!
-    speakerName: Baddie Flame Daddy
+  - text: "They took my homework! It\u2019s gone, vanished, poof!"
+    speakerName: Bro
+    speakerPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    isLeftSide: 1
+  - text: Nope! Sorry buddy...
+    speakerName: Flame Daddy
     speakerPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
     otherPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
     isLeftSide: 0
-  - text: Alright, but thanks fam!!
+  - text: Alright, thanks. These monkeys will not get away with it!!!
     speakerName: Bro
     speakerPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
     otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
     isLeftSide: 1
+  - text: All the best to you in finding your homework back!
+    speakerName: Flame Daddy
+    speakerPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    otherPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    isLeftSide: 0
   responses: []
   voiceSound: {fileID: 8300000, guid: 448d1b1ac50fd404ab79bcc138cd6d04, type: 3}
   voicePitch: 1

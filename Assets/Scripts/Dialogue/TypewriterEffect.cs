@@ -6,6 +6,12 @@ using TMPro;
 public class TypewriterEffect : MonoBehaviour
 {
     [SerializeField] private float typewriterSpeed = 50f;  // To edit in unity for the Speed of the typewriter effect (characters per second)
+    
+    [Header("Audio Settings")]
+    [SerializeField] private AudioSource blipAudioSource;                    // Plays blip sound
+    [SerializeField] private AudioClip blipSound;                           // The sound to play per letter
+    [SerializeField][Range(0f, 1f)] private float blipVolume = 0.4f;        // Volume of the blip sound
+    [SerializeField] private int blipFrequency = 2;                         // Play sound every X letters (like an example of every 2nd letter)
 
     public bool IsRunning { private set; get; }
 
@@ -52,6 +58,16 @@ public class TypewriterEffect : MonoBehaviour
 
                 textLabel.text = textToType.Substring(0, i + 1);  // Update the text to include the new character
 
+
+                // --- Play blip sound every few letters ---
+                if (blipAudioSource != null && blipSound != null && (i % blipFrequency == 0))
+                {
+                    blipAudioSource.pitch = Random.Range(0.95f, 1.05f); // optional: slight pitch variation
+                    blipAudioSource.PlayOneShot(blipSound, blipVolume);
+                }
+
+
+                // --- Check for punctuation and apply wait time ---
                 if (IsPunctuation(textToType[i], out float waitTime) && !isLast && !IsPunctuation(textToType[i + 1], out _))
                 {
                     yield return new WaitForSeconds(waitTime);  // Wait for the specified duration if it's a punctuation character
