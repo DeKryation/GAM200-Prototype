@@ -64,4 +64,18 @@ public class SceneLoader : MonoBehaviour
             yield return StartCoroutine(Fade(1f, 0f));
         }
     }
+
+     // Method to be called when player makes a choice in the cutscene
+
+    // Called when player selects “Yes”
+    public void OnYesSelected(string nextSceneName)
+    {
+        LoadScene(nextSceneName);   // Load the next scene based on the player's choice
+    }
+
+    // Called when player selects “No” (e.g. failed the level returns back to the main menu)
+    public void OnNoSelected()
+    {
+        LoadScene("Edris' Scene"); // Make sure this matches your main menu scene name
+    }
 }
