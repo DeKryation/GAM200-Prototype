@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,7 +9,12 @@ public class DeathScreenController : MonoBehaviour
     [SerializeField] private GameObject deathScreenPanel;   // Panel with your message + buttons
     [SerializeField] private Button defaultSelectedButton;  // (optional) first selected for gamepad
 
+    [Header("Timing")]
+    [SerializeField] private float delaySeconds = 1.0f;     // Delay after death before showing screen
+
     private Damageable playerDamageable;
+    private bool showQueued = false;
+    private Coroutine showRoutine;
 
     private void Awake()
     {
@@ -24,21 +30,40 @@ public class DeathScreenController : MonoBehaviour
     private void OnEnable()
     {
         if (playerDamageable != null)
-            playerDamageable.damageableDeath.AddListener(ShowDeathScreen);
+            playerDamageable.damageableDeath.AddListener(QueueDeathScreen);
     }
 
     private void OnDisable()
     {
         if (playerDamageable != null)
-            playerDamageable.damageableDeath.RemoveListener(ShowDeathScreen);
+            playerDamageable.damageableDeath.RemoveListener(QueueDeathScreen);
+
+        if (showRoutine != null)
+            StopCoroutine(showRoutine);
+
+        showQueued = false;
     }
 
-    private void ShowDeathScreen()
+    private void QueueDeathScreen()
     {
-        if (deathScreenPanel) deathScreenPanel.SetActive(true);
-        Time.timeScale = 0f; // pause game
+        if (showQueued) return; // prevent double-queue
+        showQueued = true;
+        showRoutine = StartCoroutine(ShowAfterDelay());
+    }
 
-        // (optional) set selected for keyboard/controller navigation
+    private IEnumerator ShowAfterDelay()
+    {
+        // Use unscaled time so the delay works even if timeScale changes elsewhere.
+        float t = 0f;
+        while (t < delaySeconds)
+        {
+            t += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (deathScreenPanel) deathScreenPanel.SetActive(true);
+        Time.timeScale = 0f; // pause game AFTER the delay
+
         if (defaultSelectedButton != null)
             defaultSelectedButton.Select();
     }
