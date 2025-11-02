@@ -15,23 +15,15 @@ public class PlayerSounds : MonoBehaviour
 
     private void Update()
     {
-        if (playerController.IsMoving && playerController.GetComponent<TouchingDirections>().IsGrounded)
+        if (playerController.IsMoving && touching.IsGrounded)
         {
             stepTimer -= Time.deltaTime;
-
-            // Adjust interval based on speed (higher speed = shorter interval)
-            float speed = Mathf.Abs(playerController.CurrentMoveSpeed);
-            float interval = baseStepInterval * (playerController.walkSpeed / Mathf.Max(speed, 0.1f));
 
             if (stepTimer <= 0f)
             {
                 PlayFootstepSFX();
-                stepTimer = interval;
+                stepTimer = baseStepInterval; // fixed 0.4s, ignore speed scaling for now
             }
-        }
-        else
-        {
-            stepTimer = 0.1f;  // reset when idle
         }
     }
 

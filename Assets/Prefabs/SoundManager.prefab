@@ -104,8 +104,24 @@ MonoBehaviour:
     volume: 0.5
     pitch: 1
     loop: 0
+  - name: DialogueVoice
+    clip: {fileID: 8300000, guid: 448d1b1ac50fd404ab79bcc138cd6d04, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 1
+  - name: InteractIconPop
+    clip: {fileID: 8300000, guid: a743228627563b8468de059533ff9b64, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+  - name: TrainSFX
+    clip: {fileID: 8300000, guid: 8a52ff32c4803424696fa869d1e2f5af, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 0
   musicSource: {fileID: 8604122282671369631}
   sfxSource: {fileID: 2813949343350935384}
+  sfxSourceCount: 5
 --- !u!1 &6321321363856608070
 GameObject:
   m_ObjectHideFlags: 0
