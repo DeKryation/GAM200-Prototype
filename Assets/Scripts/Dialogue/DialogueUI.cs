@@ -16,6 +16,8 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Image rightPortrait;
     [SerializeField] private TMP_Text leftCharacterNameLabel;
     [SerializeField] private TMP_Text rightCharacterNameLabel;
+    [SerializeField] private UnityEngine.UI.Image leftNameCard;
+    [SerializeField] private UnityEngine.UI.Image rightNameCard;
     [SerializeField] private float inactiveAlpha = 0.5f;
     [SerializeField] private float activeAlpha = 1f;
 
@@ -79,6 +81,19 @@ public class DialogueUI : MonoBehaviour
                 rightPortrait.color = new Color(1f, 1f, 1f, line.isLeftSide ? inactiveAlpha : activeAlpha);
             }
 
+            // Handle namecards fade alongside portraits
+            if (leftNameCard != null)
+            {
+                leftNameCard.gameObject.SetActive(true);
+                SetImageAlpha(leftNameCard, line.isLeftSide ? activeAlpha : inactiveAlpha);
+            }
+
+            if (rightNameCard != null)
+            {
+                rightNameCard.gameObject.SetActive(true);
+                SetImageAlpha(rightNameCard, line.isLeftSide ? inactiveAlpha : activeAlpha);
+            }
+
             // Update character names
             if (leftCharacterNameLabel != null)
                 leftCharacterNameLabel.text = line.isLeftSide ? line.speakerName : "";
@@ -122,6 +137,14 @@ public class DialogueUI : MonoBehaviour
         var c = portrait.color;
         c.a = alpha;
         portrait.color = c;
+    }
+
+    private void SetImageAlpha(UnityEngine.UI.Image image, float alpha)     // Helper method to set image alpha
+    {
+        if (image == null) return;
+        var c = image.color;
+        c.a = alpha;
+        image.color = c;
     }
 
     public void CloseDialogueBox()      // Method to close the dialogue box and reset UI elements

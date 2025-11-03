@@ -15,28 +15,28 @@ MonoBehaviour:
   dialogueLines:
   - text: Hey there, by any chance you have seen any monkeys around?
     speakerName: Bro
-    speakerPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
     otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
     isLeftSide: 1
   - text: "They took my homework! It\u2019s gone, vanished, poof!"
     speakerName: Bro
-    speakerPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
     otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
     isLeftSide: 1
   - text: Nope! Sorry buddy...
     speakerName: Flame Daddy
     speakerPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
-    otherPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
     isLeftSide: 0
   - text: Alright, thanks. These monkeys will not get away with it!!!
     speakerName: Bro
-    speakerPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
     otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
     isLeftSide: 1
   - text: All the best to you in finding your homework back!
     speakerName: Flame Daddy
     speakerPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
-    otherPortrait: {fileID: 21300000, guid: b26017f832ad64b468e79f78d942eae9, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
     isLeftSide: 0
   responses: []
   voiceSound: {fileID: 8300000, guid: 448d1b1ac50fd404ab79bcc138cd6d04, type: 3}
