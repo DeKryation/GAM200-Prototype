@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Video;
 
 [RequireComponent(typeof(Collider2D))]
 public class DoorVictoryTrigger : MonoBehaviour
@@ -8,14 +9,17 @@ public class DoorVictoryTrigger : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private bool oneShot = true;
 
+    [Header("Cutscene")]
+    [SerializeField] private VideoClip cutsceneClip;      // <- assign your MP4 (imported as VideoClip)
+    [SerializeField] private float extraDelayAfter = 0.0f; // seconds to wait after it ends
+
     [Header("Events")]
-    public UnityEvent onVictoryTriggered;
+    public UnityEvent onVictoryTriggered; // already points to VictoryScreenController.ShowVictoryScreen
 
     private bool _consumed;
 
     private void Reset()
     {
-        // Make sure collider is a trigger
         var col = GetComponent<Collider2D>();
         col.isTrigger = true;
     }
@@ -26,6 +30,19 @@ public class DoorVictoryTrigger : MonoBehaviour
         if (!other.CompareTag(playerTag)) return;
 
         _consumed = true;
-        onVictoryTriggered?.Invoke();
+
+        // Play cutscene overlay, then fire victory UI
+        if (CutscenePlayer.Instance != null && cutsceneClip != null)
+        {
+            CutscenePlayer.Instance.Play(cutsceneClip, extraDelayAfter, () =>
+            {
+                onVictoryTriggered?.Invoke();
+            });
+        }
+        else
+        {
+            // Fallback: no clip or player in scene -> just show victory
+            onVictoryTriggered?.Invoke();
+        }
     }
 }

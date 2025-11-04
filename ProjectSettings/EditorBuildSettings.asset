@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainLDScene.unity
     guid: 3b392d72e4979af49bde7263f5092e44
+  - enabled: 1
+    path: Assets/Scenes/StartingCutscene.unity
+    guid: 9d34ec21cbc8d90499fd2ca5f78fae96
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
