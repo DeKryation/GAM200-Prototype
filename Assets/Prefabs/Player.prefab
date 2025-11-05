@@ -178,11 +178,11 @@ MonoBehaviour:
   maxAdrenaline: 3000
   startAdrenaline: 1500
   decreaseRate: 110
-  increaseRate: 65
+  increaseRate: 60
   isMoving: 0
   frenzyBar: {fileID: 0}
-  frenzyDuration: 6
-  dieOnZero: 1
+  frenzyDuration: 10
+  dieOnZero: 0
   deathThreshold: 3000
   adrenalineChanged:
     m_PersistentCalls:
