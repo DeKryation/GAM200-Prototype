@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cb63c3cc672692408a21a266af340c6, type: 3}
+  m_Name: 3rdDialogue
+  m_EditorClassIdentifier: 
+  dialogueLines:
+  - text: ....
+    speakerName: Bro
+    speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    isLeftSide: 1
+  - text: ribbit...ribbit...
+    speakerName: Froggo
+    speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    isLeftSide: 0
+  - text: Erm... a frog at a platform, thats weird...
+    speakerName: Bro
+    speakerPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
+    isLeftSide: 1
+  - text: ribbit...ribbit...
+    speakerName: Froggo
+    speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    isLeftSide: 0
+  responses: []
+  voiceSound: {fileID: 8300000, guid: 448d1b1ac50fd404ab79bcc138cd6d04, type: 3}
+  voicePitch: 1
