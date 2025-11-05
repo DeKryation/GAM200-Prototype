@@ -16,22 +16,22 @@ MonoBehaviour:
   - text: ....
     speakerName: Bro
     speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
-    otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 5b8f2ad67f7eb724ab429be830aeddbe, type: 3}
     isLeftSide: 1
   - text: ribbit...ribbit...
     speakerName: Froggo
-    speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
-    otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    speakerPortrait: {fileID: 21300000, guid: 5b8f2ad67f7eb724ab429be830aeddbe, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
     isLeftSide: 0
   - text: Erm... a frog at a platform, thats weird...
     speakerName: Bro
-    speakerPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
-    otherPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
+    speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 5b8f2ad67f7eb724ab429be830aeddbe, type: 3}
     isLeftSide: 1
   - text: ribbit...ribbit...
     speakerName: Froggo
-    speakerPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
-    otherPortrait: {fileID: 21300000, guid: 960c8422db6e9434d87232a547efbd61, type: 3}
+    speakerPortrait: {fileID: 21300000, guid: 5b8f2ad67f7eb724ab429be830aeddbe, type: 3}
+    otherPortrait: {fileID: 21300000, guid: 5aad68810397a904bab730d9aef612d8, type: 3}
     isLeftSide: 0
   responses: []
   voiceSound: {fileID: 8300000, guid: 448d1b1ac50fd404ab79bcc138cd6d04, type: 3}
