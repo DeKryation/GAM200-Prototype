@@ -20,7 +20,8 @@ J - Basic Attack
 K - Parry
 > To reflect or encounter enemy attack
 
-E - Interact (A dialogue indicator will be triggered around Interactable NPC only for dialogue)
+E - Interact
+> A dialogue indicator will be triggered around Interactable NPC only for dialogue
 
 OnMouseDown Left Click / Spacebar - Continue the Dialogue
 
