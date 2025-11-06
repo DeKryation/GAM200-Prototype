@@ -15,10 +15,12 @@ Shift - Dash
 Spacebar + Shift (with higher heartrate) - Long Jump
 
 J - Basic Attack
+> Press J consecutively within a 1-second timeframe to chain up to a 3-hit combo attack
 
 K - Parry
+> To reflect or encounter enemy attack
 
-E - Interact
+E - Interact (A dialogue indicator will be triggered around Interactable NPC only for dialogue)
 
 OnMouseDown Left Click / Spacebar - Continue the Dialogue
 
@@ -52,6 +54,8 @@ Collect Bananas - Restore Energy
 
 2: short lane teaches Dash 
 
+3: Meets Interactable NPC to learn the player's goal
+
 3: pits teach Jump/Long Jump 
 
 4: flat arena teaches Attack 
@@ -66,6 +70,8 @@ Collect Bananas - Restore Energy
 *Combat & Hazards*:
 
 - Use basic attacks to defeat enemies, or parry to stun and counter.
+
+- Use full mastery of 3-hit combo attack to clear the enemy wave faster.
 
 - Use Dash or High Heartrate + Dash to clear long jump platforms.
 
